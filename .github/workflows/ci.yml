@@ -1,0 +1,22 @@
+name: check
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  rust:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: System dependencies
+        run: sudo apt-get update && sudo apt-get install -y pkgconf libpcsclite-dev
+      - name: Pinned toolchain
+        run: rustup show
+      - name: Default and simulated checkout
+        run: bash scripts/check.sh
+      - name: Reader feature
+        run: cargo test --workspace --features pcsc-reader --locked
+      - name: Development NFC bridge
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -r adapters/nfcd/requirements.txt
+          .venv/bin/python scripts/test_nfcd_bridge.py

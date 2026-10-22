@@ -1,0 +1,15 @@
+[package]
+name = "tap-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+blake2.workspace = true
+minicbor.workspace = true
+hex.workspace = true
+serde.workspace = true
+sui-crypto.workspace = true
+sui-sdk-types.workspace = true
+

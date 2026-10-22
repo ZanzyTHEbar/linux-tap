@@ -1,0 +1,31 @@
+{
+  "repository": "https://github.com/MystenLabs/skills",
+  "revision": "e31b38016723e2dcee36161d59c50e028e13b52a",
+  "files": {
+    "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "accessing-data/SKILL.md": "b2bc3645a2f6f9625d2cfd58390ca39b4d31b25640109201f5bac4608404e1e7",
+    "accessing-data/archival.md": "c0e98270000cf256b95db87d8be07c52bbdf5288a620b4a62d6a2b881f025156",
+    "accessing-data/graphql.md": "a770feb6d39453e66a970e25b2a28e15fe28da3e42429047f1ba0e5ac92c4927",
+    "accessing-data/grpc.md": "f61036a3aec28b8b876a9e8d5d64d311024f2db191ef7c73525fcdbc96fc2a8c",
+    "accessing-data/indexers.md": "17c749144edc9b4a7a92336dfec5a958daf369011ad3f1bd6c709960673c3df6",
+    "accessing-data/use-cases.md": "e8b72a799ceaf1574fa7c0d344a48154d1adddc855a322805ef683820b39ab24",
+    "accessing-data/walrus.md": "124e3b051b137354cbe94912553fc97835170e4df5c28fcf992a827b1f1431a0",
+    "move-security/SKILL.md": "5e6dc932f0e1c0b307424bf351c3e53a3356ab9616ef33a925162348f4550e3e",
+    "move-security/access-control.md": "e0ac255fad4c1b940c9cd3da270889486dd92ce1fc8a6ef6cbcb12de2483bd4f",
+    "move-security/best-practices.md": "9c9d416ff4c3f8b9133fdc2ad4c6831af8ace2b39f78caa70875ee12df00a7df",
+    "ptbs/SKILL.md": "4471b53a801261ea587896551a4bb1b729e6dd2068b621f382aefc78dcf361be",
+    "ptbs/building.md": "dc3d8ffbb2f82d87289043b5f289a91aead8a74537653a850386dd2318d6f1a2",
+    "ptbs/cli.md": "8696a6cc6c49d8b2772ca92db56c9b66e765434696ef40d31f377eba803e7b7d",
+    "ptbs/commands.md": "5ec8ff4481e7810c880551b688c2bcbf94b56ab1ea6b15b223fea3a13d452dde",
+    "ptbs/fundamentals.md": "fb020c24d34321d6ea741d614a004bf7a6c4f1b99f825d8a0afa1bdebc2dc878",
+    "ptbs/troubleshooting.md": "f989ba70cd82d73f05a0fe7b2aafd274344547d8715ff7d01c9c551d1882d41d",
+    "sui-overview/SKILL.md": "4709c87fc33a72f0fc11e973ecaecfe5404832eef97f3c38e240b75d7809cae8",
+    "sui-overview/ecosystem.md": "1b972f45253b2214aec78a6ebd47499d7441b1ef54e43a9a0536911c9c016485",
+    "sui-sdks/SKILL.md": "35b4d61a0ca099ab6b25a46f8721f52b23a149568c2f76841ff5f61b9624f166",
+    "sui-sdks/community.md": "91d1a9ec0d73594cddfec3957473eab171de12dd88337215fe4c0c11c4019f8e",
+    "sui-sdks/llm-docs.md": "bcb3a076a4c8300933d170c4da0479a5df148e648b9997cde69d418f756c3ed1",
+    "sui-sdks/mapping.md": "cf1f9f07b6547f69371a34ac6ad6d33d2fb0f461601239761043cd69ae938a3a",
+    "sui-sdks/rust.md": "bacb0cdc02d5e371a7dccbd0e1af0ed7e2dbee9cce121602b66b9498f0d1137d",
+    "sui-sdks/typescript.md": "dcb7e6c7a2d81aad93b63691d5ef38696f3938aa1b209501177837ff269ebf9b"
+  }
+}

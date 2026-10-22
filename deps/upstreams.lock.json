@@ -1,0 +1,47 @@
+{
+  "reviewed": "2026-10-22",
+  "upstreams": [
+    {
+      "name": "sui-rust-sdk",
+      "url": "https://github.com/MystenLabs/sui-rust-sdk.git",
+      "rev": "1313d5112464ecc25d7407f42442adea08589fc5",
+      "license": "Apache-2.0",
+      "role": "Cargo dependency"
+    },
+    {
+      "name": "mysten-skills",
+      "url": "https://github.com/MystenLabs/skills.git",
+      "rev": "e31b38016723e2dcee36161d59c50e028e13b52a",
+      "license": "Apache-2.0",
+      "role": "Selected unmodified agent skills bundled"
+    },
+    {
+      "name": "nfcd",
+      "url": "https://github.com/sailfishos/nfcd.git",
+      "rev": "6fc7aa906df5b6f2c508aab1832c51827095586e",
+      "license": "BSD-3-Clause",
+      "role": "Optional D-Bus host daemon; hardware adapter required"
+    },
+    {
+      "name": "pn7160",
+      "url": "https://github.com/NXPNFCLinux/linux_libnfc-nci.git",
+      "rev": "d5af4ef88244b9f962986b39eb4126a8c1c0aead",
+      "license": "Mixed file licenses; inspect fetched tree",
+      "role": "Optional hardware qualification branch NCI2.0_PN7160"
+    },
+    {
+      "name": "pcsc-rust",
+      "url": "https://github.com/bluetech/pcsc-rust.git",
+      "rev": "822b83e15bb0cfc0f492a17ec9eeb4c4355b3089",
+      "license": "MIT",
+      "role": "Cargo optional reader feature"
+    },
+    {
+      "name": "cxx-qt",
+      "url": "https://github.com/KDAB/cxx-qt.git",
+      "rev": "f62f0570ab9bc4a8027e3a07f236e3cb80bbce2f",
+      "license": "MIT OR Apache-2.0; some CMake BSD-3-Clause",
+      "role": "Selected future UI bridge; not linked yet"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+/target/
+/vendor/
+/.demo/
+*.db
+*.db-shm
+*.db-wal
+*.signed.json
+*.key
+__pycache__/
+*.pyc
+/.venv/
+
+# Local-only assets and legacy history; never publish.
+/.agents/
+.impeccable/
+/demos/
+/fixtures/
+/history.bundle
