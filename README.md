@@ -11,6 +11,17 @@ it uses real Sui transaction signatures but never submits funds to a chain.
 
 ## Run the tested checkout
 
+For a guided terminal recording, see the [Omarchy demo](docs/demo.md):
+
+```sh
+cargo build --locked -p tap-cli
+python3 scripts/demo.py
+```
+
+This uses separate native Rust processes over a private Unix socket. Review the
+terms, type `APPROVE SIMULATION`, then follow the restart/replay prompts. It is
+an offline software proof of concept, **not a live NFC payment demo**.
+
 Install the Rust toolchain named in `rust-toolchain.toml`, a C compiler, Git and
 Python 3. Then run from this directory:
 

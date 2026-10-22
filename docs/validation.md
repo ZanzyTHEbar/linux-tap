@@ -21,11 +21,41 @@ step. Cargo.lock is committed; dependency license metadata is recorded separatel
 - Twenty-five included upstream guidance files checked against their recorded
   SHA256 hashes. Cargo metadata inventory includes 198 resolved packages.
 
-## Environment limitations observed
+## Recording-demo increment (22 October 2026)
 
-The runner rejects Unix socket binding with EPERM. The socket transport therefore
-compiled but was not exercised; the smoke test uses pipes with the same signed
-invoice and payment messages. Test the socket path on the intended Omarchy host.
+On this increment's x86-64 Linux runner, using pinned Rust 1.99.1:
+
+- `bash scripts/check.sh`: passed formatting, Clippy with warnings denied, all
+  15 existing tests, CLI build and the separate pipe smoke test.
+- `python3 scripts/demo.py --approve-simulation`: passed against real private
+  Unix sockets with separate native Rust merchant and wallet processes. Before
+  sending, the merchant had zero payment records. Both processes restarted;
+  the entire stored signed payload (not only its digest) matched on resume and
+  replay. Exactly one prepared transaction, simulated payment and matching wallet
+  receipt remained. APDU reconstruction passed in software (seven frames).
+- A temporary PTY harness ran `python3 scripts/demo.py` with actual terminal
+  input, approved the displayed terms and continued both restart prompts: passed.
+  A second run typed `NO`: exited nonzero before creating a wallet journal, with
+  no PASS result. This verifies host-terminal approval, not a hardware display.
+- `python3 -m py_compile scripts/demo.py` and `git diff --check`: passed.
+
+The demo retains per-run journals, merchant log and result JSON in its printed
+private `/tmp/ltap-*` directory; these are temporary software artifacts, not
+durable database backups. PTY transcripts for this run are local evidence only,
+not a published recording. No new test suite, dependency, reader or vendor code
+was added. The prior PC/SC compilation record above is not a new hardware result.
+
+This host is not an Omarchy desktop qualification. No real display/recorder UX,
+ARM64 build, live-node request, funds movement or physical NFC was exercised by
+this increment. Missing finalized charter/specification traceability and remaining
+mandatory capabilities are listed in [the demo gap analysis](demo.md).
+
+## Earlier bootstrap environment limitations
+
+The earlier bootstrap runner rejected Unix socket binding with EPERM, so that
+run covered pipes only. The recording-demo increment above successfully exercised
+socket binding on its runner. Test the socket path on the intended Omarchy host;
+the demo deliberately fails rather than silently falling back to pipes.
 
 The read-only testnet gRPC probe was attempted and failed at DNS resolution in
 this environment. No live chain identity, balance, transaction eligibility,

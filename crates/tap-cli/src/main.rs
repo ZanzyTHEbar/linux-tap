@@ -4,7 +4,7 @@ use clap::{Parser, Subcommand};
 use rand::RngCore;
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{
-    io::Read,
+    io::{IsTerminal, Read},
     os::unix::fs::{OpenOptionsExt, PermissionsExt},
     path::{Path, PathBuf},
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -50,6 +50,9 @@ enum Command {
         journal: PathBuf,
         #[arg(long)]
         approve_simulation: bool,
+        /// Review exact terms and type APPROVE SIMULATION in a terminal before signing/retry.
+        #[arg(long, requires = "socket", conflicts_with = "approve_simulation")]
+        interactive_simulation: bool,
         #[arg(long)]
         disconnect_after_journal: bool,
     },
@@ -144,7 +147,8 @@ async fn send<T: Serialize, W: AsyncWrite + Unpin>(s: &mut W, value: &T) -> Resu
     Ok(())
 }
 async fn receive<T: DeserializeOwned, R: AsyncRead + Unpin>(s: &mut R) -> Result<T> {
-    tokio::time::timeout(Duration::from_secs(20), async {
+    // Bound stalled sessions while allowing time to review the terminal approval.
+    tokio::time::timeout(Duration::from_secs(120), async {
         let n = s.read_u32().await? as usize;
         ensure!(n <= 65_536, "frame too large");
         let mut b = vec![0; n];
@@ -276,11 +280,16 @@ async fn pay(
     stdio: bool,
     journal: PathBuf,
     approve: bool,
+    interactive: bool,
     disconnect: bool,
 ) -> Result<()> {
     ensure!(
-        approve,
-        "supply --approve-simulation to approve public-fixture laboratory signing"
+        approve || interactive,
+        "choose --interactive-simulation with a socket, or --approve-simulation for fixture automation"
+    );
+    ensure!(
+        !interactive || (!stdio && std::io::stdin().is_terminal()),
+        "interactive simulation requires a socket and terminal input"
     );
     ensure!(
         stdio != socket.is_some(),
@@ -291,13 +300,14 @@ async fn pay(
             &mut tokio::io::stdin(),
             &mut tokio::io::stdout(),
             journal,
+            interactive,
             disconnect,
         )
         .await
     } else {
         let mut s = UnixStream::connect(socket.context("socket missing")?).await?;
         let (mut r, mut w) = s.split();
-        pay_exchange(&mut r, &mut w, journal, disconnect).await
+        pay_exchange(&mut r, &mut w, journal, interactive, disconnect).await
     }
 }
 
@@ -305,11 +315,35 @@ async fn pay_exchange<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     reader: &mut R,
     writer: &mut W,
     journal: PathBuf,
+    interactive: bool,
     disconnect: bool,
 ) -> Result<()> {
     let signed: SignedInvoice = receive(reader).await?;
     let invoice = signed.verify(&fixture_key())?;
     tap_core::reject_mainnet_simulation(&invoice.chain)?;
+    if interactive {
+        invoice.validate_checkout(now()?, &[42; 32], &[USDC])?;
+        eprintln!("\nLINUX TAP / SIMULATION ONLY / NO FUNDS MOVE");
+        eprintln!("Merchant trust: pinned public laboratory key (not a verified business)");
+        eprintln!("Merchant key: {}", hex::encode(fixture_key()));
+        eprintln!("Network: synthetic laboratory chain; not Sui mainnet or testnet");
+        eprintln!(
+            "Amount: {}.{:06} USDC ({} base units)",
+            invoice.amount / 1_000_000,
+            invoice.amount % 1_000_000,
+            invoice.amount
+        );
+        eprintln!("Asset type: {}", invoice.coin_type);
+        eprintln!("Recipient: 0x{}", hex::encode(invoice.receiver));
+        eprintln!("Invoice hash: {}", hex::encode(signed.invoice_hash()?));
+        eprintln!(
+            "Approval: development software signer; public fixture key, no hardware approval"
+        );
+        eprintln!("Type APPROVE SIMULATION to sign or retry these exact terms:");
+        let mut confirmation = String::new();
+        std::io::stdin().read_line(&mut confirmation)?;
+        ensure!(confirmation.trim() == "APPROVE SIMULATION", "not approved");
+    }
     let ih = hex::encode(signed.invoice_hash()?);
     let journal = store::Store::open(&journal)?;
     let prepared = match journal.load_prepared(&ih)? {
@@ -465,6 +499,7 @@ async fn main() -> Result<()> {
             stdio,
             journal,
             approve_simulation,
+            interactive_simulation,
             disconnect_after_journal,
         } => {
             pay(
@@ -472,6 +507,7 @@ async fn main() -> Result<()> {
                 stdio,
                 journal,
                 approve_simulation,
+                interactive_simulation,
                 disconnect_after_journal,
             )
             .await

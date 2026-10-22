@@ -14,7 +14,7 @@ funded multi-person programme.
 | B06 | Demonstrate two-process checkout | Interrupted wallet and restarted merchant yield one simulated receipt | Done over pipes |
 | B07 | Add merchant reader transport | Optional PC/SC build and transmit command | Compiled only |
 | B08 | Reuse Linux card-emulation interface | nfcd bridge and upstream XML | Software bridge only |
-| B09 | Test Unix socket transport on your Omarchy host | Same smoke scenario over real private sockets | Next |
+| B09 | Test Unix socket transport on your Omarchy host | Same smoke scenario over real private sockets | Linux socket demo verified; Omarchy host pending |
 | B10 | Qualify actual Sui gRPC access | Saved genesis identity, epoch and endpoint policy | Open |
 | B11 | Qualify gasless native USDC shape | Live dry-run, live protocol configuration and address-balance funding evidence | Open |
 | B12 | Propose offline-builder fix upstream | Minimal reproducer and reviewed patch | Reproducer done; not posted |
@@ -39,6 +39,10 @@ Begin locally with the README build and smoke command, then B09 and B10. B11 is
 the next chain blocker: do not spend a week building UI while gasless source
 funds and template eligibility remain unproven. B17 can proceed independently
 once the board is available; do not rewrite a phone driver first.
+
+The [recording-friendly demo](demo.md) exercises private sockets, explicit
+terminal approval and exact-byte replay without submitting a transaction. It
+does not close B10–B28 or substitute for finalized production requirements.
 
 Use tests or a development network for destructive fault injection. A live
 mainnet qualification is a separate deliberately funded experiment with fresh
