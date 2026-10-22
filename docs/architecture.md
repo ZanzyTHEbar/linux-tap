@@ -54,11 +54,16 @@ checkout with onchain deduplication is a separate paid or sponsored profile.
 ## Scope changes from the paper design
 
 The initial workspace has three crates rather than ten services. The signed
-invoice is a deliberately smaller draft v0 schema. Network eligibility and
-submission are not implemented. A trusted RPC predicate exists, but no chain
-result has been manufactured to make the simulator look live. Hardware profiles,
-fresh merchant custody addresses, production recovery and Qt approval remain
-explicit backlog items.
+invoice is a deliberately smaller draft v0 schema. Successful network eligibility
+remains unproven and submission is unimplemented. A trusted RPC predicate exists,
+but no chain result has been manufactured to make the simulator look live. The separate
+read-only `qualify-testnet` command now checks protocol configuration, exact asset
+metadata, address-balance funding and checked simulation of `build_direct`.
+It constructs diagnostic unsigned terms, not an authenticated payment request;
+it does not relax invoice pins, signing or receipt predicates. Qualification
+failed for the pinned asset on testnet, so submission remains unimplemented.
+Hardware profiles, fresh merchant custody addresses, production recovery and
+Qt approval remain explicit backlog items.
 
 USDC is a centralized-issuer asset on a decentralized settlement network. The
 project can remove mandatory wallet/cloud dependencies; it cannot remove issuer

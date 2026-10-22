@@ -1,0 +1,41 @@
+{
+  "evidence_scope": "Live read-only gRPC report excerpt, 2026-10-22; only selected protocol configs retained; unsigned diagnostic terms, no funded sender",
+  "endpoint": "https://fullnode.testnet.sui.io:443",
+  "node": {
+    "chain_id": "69WiPg3DAQiwdxfncX6wYQ2siKwAe6L9BZthQea3JNMD",
+    "chain": "testnet",
+    "epoch": 1260,
+    "checkpoint": 397908031
+  },
+  "asset": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+  "sender": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "receiver": "0x0000000000000000000000000000000000000000000000000000000000000001",
+  "amount": 10000,
+  "transaction_digest": "FWJhGZPpftNtzBgym5UNzgXeMF738CDkhPUhbaV9Vgg3",
+  "transaction_bcs_hex": "000002020010270000000000000007dba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e704757364630455534443000000200000000000000000000000000000000000000000000000000000000000000001020000000000000000000000000000000000000000000000000000000000000000020762616c616e63650c72656465656d5f66756e64730107dba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e70475736463045553444300010100000000000000000000000000000000000000000000000000000000000000000000020762616c616e63650a73656e645f66756e64730107dba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e70475736463045553444300020200000101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000201ec0400000000000001ec040000000000000000204c78adacf2a2f5ad80f27ed7d54aa69d3a78f1ca67fdef9ecf5754f5b8bb77b000000000",
+  "protocol": {
+    "protocolVersion": "139",
+    "configs": {
+      "enable_gasless": true,
+      "enable_accumulators": true,
+      "enable_object_funds_withdraw": true,
+      "gasless_allowed_token_types": [
+        ["0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC", "0"]
+      ]
+    }
+  },
+  "coin_info": null,
+  "balance": {
+    "coinType": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+    "balance": "0"
+  },
+  "simulation": null,
+  "blockers": [
+    "pinned USDC/amount absent from protocol gasless allowlist or allowlist unknown",
+    "pinned USDC lookup failed: Some requested entity was not found: Coin type 0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC not found",
+    "insufficient or unknown pinned USDC address balance (coin objects do not qualify)",
+    "checked exact-template simulation failed: Client specified an invalid argument: Error checking transaction input objects: Feature is not supported: Fund type 0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC is not currently allowed in gasless transactions"
+  ],
+  "qualified": false,
+  "chain_submission": false
+}

@@ -1415,6 +1415,7 @@ dependencies = [
  "bcs",
  "hex",
  "serde",
+ "serde_json",
  "sui-crypto",
  "sui-rpc",
  "sui-sdk-types",

@@ -15,4 +15,4 @@ sui-transaction-builder.workspace = true
 sui-rpc.workspace = true
 tokio.workspace = true
 serde.workspace = true
-
+serde_json.workspace = true

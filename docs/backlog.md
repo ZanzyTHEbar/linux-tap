@@ -15,10 +15,10 @@ funded multi-person programme.
 | B07 | Add merchant reader transport | Optional PC/SC build and transmit command | Compiled only |
 | B08 | Reuse Linux card-emulation interface | nfcd bridge and upstream XML | Software bridge only |
 | B09 | Test Unix socket transport on your Omarchy host | Same smoke scenario over real private sockets | Linux socket demo verified; Omarchy host pending |
-| B10 | Qualify actual Sui gRPC access | Saved genesis identity, epoch and endpoint policy | Open |
-| B11 | Qualify gasless native USDC shape | Live dry-run, live protocol configuration and address-balance funding evidence | Open |
+| B10 | Qualify actual Sui gRPC access | Saved genesis identity, epoch and endpoint policy | Read-only public testnet verified; see testnet-qualification.md |
+| B11 | Qualify gasless native USDC shape | Live dry-run, live protocol configuration and address-balance funding evidence | Blocked: pinned asset absent/not gasless-allowed on testnet; checked simulation rejected |
 | B12 | Propose offline-builder fix upstream | Minimal reproducer and reviewed patch | Reproducer done; not posted |
-| B13 | Add capability-driven preparation | Wrong network/protocol/asset fails before signing | Open |
+| B13 | Add capability-driven preparation | Wrong network/protocol/asset fails before signing | Read-only qualification gate added; signing integration still open |
 | B14 | Add controlled submission and reconciliation | Persisted exact bytes, no replacement on timeout, successful checkpoint verification | Open |
 | B15 | Add fresh merchant receiving custody | Unique per invoice, watch-only acceptance and tested backups | Open |
 | B16 | Test real PC/SC reader | Reader inventory and successful APDU traces | Open |

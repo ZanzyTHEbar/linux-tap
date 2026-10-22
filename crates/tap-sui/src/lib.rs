@@ -18,6 +18,8 @@ use sui_sdk_types::{
 };
 use tap_core::{Invoice, USDC};
 
+pub mod qualification;
+
 /// Experimental address-balance template using only official SDK types and BCS.
 /// The pinned offline builder rejects empty gas objects; see ADR 0002.
 pub fn build_direct(

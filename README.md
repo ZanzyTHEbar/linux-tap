@@ -62,6 +62,12 @@ file is 32 raw bytes, mode 0600. Run `linux-tap prepare-draft --help` for inputs
 Use fresh development keys. The demo's fixed fixture keys are public and must
 never receive funds.
 
+`qualify-testnet` reads protocol configuration, the exact pinned USDC metadata
+and sender address balance, then simulates the existing transaction with checks
+enabled and gas selection disabled. It needs public addresses only, not keys.
+The [testnet qualification](docs/testnet-qualification.md) failed: the pinned
+asset is not allowed on testnet. No asset substitution or broadcast is provided.
+
 ## NFC stepping stones
 
 On Arch or Omarchy, the optional merchant reader build needs `pkgconf` and
@@ -90,7 +96,8 @@ nfcd to the NXP vendor stack. See [hardware qualification](docs/hardware.md).
 
 ## What is deliberately unfinished
 
-- Live gasless simulation and submission, including actual network eligibility.
+- Successful live gasless qualification and submission. The checked testnet
+  simulation rejects the currently pinned asset.
 - Hardware signer implementations and recovery, encrypted production keystore.
 - Physical NFC qualification and a native phone driver path.
 - Native Qt UI, commercial POS integration, production refunds and accounting.

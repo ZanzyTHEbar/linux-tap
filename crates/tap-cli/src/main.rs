@@ -61,6 +61,21 @@ enum Command {
         #[arg(long)]
         endpoint: String,
     },
+    /// Read-only testnet qualification of the exact pinned USDC template. No signing or broadcast.
+    QualifyTestnet {
+        #[arg(long)]
+        endpoint: String,
+        /// Full expected genesis digest, pinned independently of this endpoint.
+        #[arg(long)]
+        chain_id: Digest,
+        /// Public disposable testnet address only; no key is read.
+        #[arg(long)]
+        sender: sui_sdk_types::Address,
+        #[arg(long)]
+        receiver: sui_sdk_types::Address,
+        #[arg(long, default_value_t = 10_000)]
+        amount: u64,
+    },
     /// Read-only verification against an explicitly trusted node; no local paid status is written.
     VerifyOnNode {
         #[arg(long)]
@@ -516,6 +531,24 @@ async fn main() -> Result<()> {
             println!(
                 "{}",
                 serde_json::to_string_pretty(&tap_sui::probe(&endpoint).await?)?
+            );
+            Ok(())
+        }
+        Command::QualifyTestnet {
+            endpoint,
+            chain_id,
+            sender,
+            receiver,
+            amount,
+        } => {
+            let report = tap_sui::qualification::qualify_testnet(
+                &endpoint, chain_id, sender, receiver, amount,
+            )
+            .await?;
+            println!("{}", serde_json::to_string_pretty(&report)?);
+            ensure!(
+                report.qualified,
+                "TESTNET NOT QUALIFIED; submission work blocked"
             );
             Ok(())
         }

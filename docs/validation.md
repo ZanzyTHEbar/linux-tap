@@ -50,6 +50,36 @@ ARM64 build, live-node request, funds movement or physical NFC was exercised by
 this increment. Missing finalized charter/specification traceability and remaining
 mandatory capabilities are listed in [the demo gap analysis](demo.md).
 
+## Testnet qualification increment (22 October 2026)
+
+- `bash scripts/check.sh`: passed formatting, Clippy with warnings denied, all
+  15 existing tests, CLI build and native pipe smoke (`chain_submission: false`).
+  No new helper unit tests or mock eligibility claims were added.
+- `cargo build --offline -p tap-cli`: passed after reusing the already-locked
+  serde_json dependency in tap-sui; no dependency versions changed.
+- Live `probe --endpoint https://fullnode.testnet.sui.io:443`: succeeded, genesis
+  `69WiPg3DAQiwdxfncX6wYQ2siKwAe6L9BZthQea3JNMD`, epoch 1260.
+- Live `qualify-testnet` with that full chain pin and diagnostic `--sender 0x0
+  --receiver 0x1 --amount 10000`: **failed qualification as intended**, exit 1.
+  Protocol 139 enabled gasless, but the pinned asset was absent from the token
+  allowlist, coin metadata lookup returned NotFound, address-balance funding
+  was unconfirmed, and checked simulation rejected the asset as not allowed.
+  The [qualification guide](testnet-qualification.md) records the exact command
+  and [saved live evidence excerpt](evidence/testnet-qualification-2026-10-22.json).
+- The same live command with full all-zero digest
+  `11111111111111111111111111111111`: rejected with `chain pin mismatch`, exit 1,
+  before protocol, balance or simulation calls.
+- The saved evidence excerpt was compared field-for-field with the full local
+  live report, including the retained protocol fields and exact BCS: matched.
+- `git diff --check`: passed.
+
+This is real gRPC/protocol/rejection evidence, **not a successful simulation or
+execution**. No signatures, user keys, faucets, asset substitution, funding or
+broadcasts were used. Submission/reconciliation work stopped at the failed gate.
+Successful simulation response validation compiles but lacks live success
+evidence. The earlier mock receipt predicates remain mock evidence only.
+Reader/vendor code was unchanged; PC/SC and physical hardware were not retested.
+
 ## Earlier bootstrap environment limitations
 
 The earlier bootstrap runner rejected Unix socket binding with EPERM, so that
@@ -57,10 +87,10 @@ run covered pipes only. The recording-demo increment above successfully exercise
 socket binding on its runner. Test the socket path on the intended Omarchy host;
 the demo deliberately fails rather than silently falling back to pipes.
 
-The read-only testnet gRPC probe was attempted and failed at DNS resolution in
-this environment. No live chain identity, balance, transaction eligibility,
-simulation, execution or settlement was verified. The RPC predicate has unit
-fixtures and compiles, but must be qualified against a real node.
+The earlier read-only testnet gRPC probe failed at DNS resolution. The increment
+above supersedes that connectivity limitation, not the missing live execution
+or settlement evidence. The RPC receipt predicate still has only unit fixtures
+and compilation evidence; no live receipt has been verified.
 
 ## Not tested or implemented
 
