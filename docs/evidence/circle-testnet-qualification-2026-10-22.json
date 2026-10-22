@@ -1,0 +1,49 @@
+{
+  "evidence_note": "Excerpt of live read-only report; other protocol, metadata and simulation fields omitted. ExecutedTransaction.digest was absent. Pre-existing third-party public sender, not fresh-wallet funding, signature, execution or settlement proof. Request used checks ENABLED and do_gas_selection false.",
+  "endpoint": "https://fullnode.testnet.sui.io:443",
+  "node": {
+    "chain_id": "69WiPg3DAQiwdxfncX6wYQ2siKwAe6L9BZthQea3JNMD",
+    "chain": "testnet",
+    "epoch": 1260,
+    "checkpoint": 397916564
+  },
+  "asset": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+  "sender": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "receiver": "0x0000000000000000000000000000000000000000000000000000000000000001",
+  "amount": 10000,
+  "transaction_digest": "83A7hXT7wmgm9GwfSNkdBjkb9Nvbn6cfMmyUFhaDkNkd",
+  "transaction_bcs_hex": "000002020010270000000000000007a1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e2904757364630455534443000000200000000000000000000000000000000000000000000000000000000000000001020000000000000000000000000000000000000000000000000000000000000000020762616c616e63650c72656465656d5f66756e64730107a1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e290475736463045553444300010100000000000000000000000000000000000000000000000000000000000000000000020762616c616e63650a73656e645f66756e64730107a1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e290475736463045553444300020200000101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000201ec0400000000000001ec040000000000000000204c78adacf2a2f5ad80f27ed7d54aa69d3a78f1ca67fdef9ecf5754f5b8bb77b000000000",
+  "protocol": {
+    "protocolVersion": "139",
+    "configs": {
+      "enable_gasless": true,
+      "enable_accumulators": true,
+      "enable_object_funds_withdraw": true,
+      "gasless_allowed_token_types": [
+        ["0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC", "0"]
+      ]
+    }
+  },
+  "coin_info": {
+    "coinType": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+    "metadata": {"decimals": 6}
+  },
+  "balance": {
+    "coinType": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+    "balance": "44598206",
+    "addressBalance": "3400000",
+    "coinBalance": "41198206"
+  },
+  "simulation": {
+    "transaction": {
+      "transaction": {"digest": "83A7hXT7wmgm9GwfSNkdBjkb9Nvbn6cfMmyUFhaDkNkd"},
+      "effects": {
+        "transactionDigest": "83A7hXT7wmgm9GwfSNkdBjkb9Nvbn6cfMmyUFhaDkNkd",
+        "status": {"success": true}
+      }
+    }
+  },
+  "blockers": [],
+  "qualified": true,
+  "chain_submission": false
+}

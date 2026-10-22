@@ -65,8 +65,12 @@ never receive funds.
 `qualify-testnet` reads protocol configuration, the exact pinned USDC metadata
 and sender address balance, then simulates the existing transaction with checks
 enabled and gas selection disabled. It needs public addresses only, not keys.
-The [testnet qualification](docs/testnet-qualification.md) failed: the pinned
-asset is not allowed on testnet. No asset substitution or broadcast is provided.
+The default pinned asset is not allowed on testnet. An explicit
+`--circle-testnet-usdc` flag selects Circle's official testnet type, bound to the
+fixed testnet genesis, for read-only qualification only. See
+[qualification and fresh-wallet prerequisites](docs/testnet-qualification.md).
+Signing, receipt verification and the offline demo retain their existing asset
+policy. No automatic asset substitution, conversion or broadcast is provided.
 
 ## NFC stepping stones
 
@@ -96,8 +100,8 @@ nfcd to the NXP vendor stack. See [hardware qualification](docs/hardware.md).
 
 ## What is deliberately unfinished
 
-- Successful live gasless qualification and submission. The checked testnet
-  simulation rejects the currently pinned asset.
+- Fresh-wallet gasless qualification and submission. The explicit testnet asset
+  simulated successfully using an existing funded public address, not a new wallet.
 - Hardware signer implementations and recovery, encrypted production keystore.
 - Physical NFC qualification and a native phone driver path.
 - Native Qt UI, commercial POS integration, production refunds and accounting.

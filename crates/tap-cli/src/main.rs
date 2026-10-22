@@ -11,7 +11,7 @@ use std::{
 };
 use sui_crypto::ed25519::Ed25519PrivateKey;
 use sui_sdk_types::Digest;
-use tap_core::{Invoice, MAX_ENVELOPE, SignedInvoice, USDC, apdu};
+use tap_core::{DirectAssetPolicy, Invoice, MAX_ENVELOPE, SignedInvoice, USDC, apdu};
 use tap_sui::{DevelopmentSigner, PaymentSigner, Prepared};
 use tokio::{
     io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt},
@@ -63,6 +63,9 @@ enum Command {
     },
     /// Read-only testnet qualification of the exact pinned USDC template. No signing or broadcast.
     QualifyTestnet {
+        /// Explicit Circle testnet asset; fixed testnet genesis only. Default asset is unchanged.
+        #[arg(long)]
+        circle_testnet_usdc: bool,
         #[arg(long)]
         endpoint: String,
         /// Full expected genesis digest, pinned independently of this endpoint.
@@ -535,14 +538,20 @@ async fn main() -> Result<()> {
             Ok(())
         }
         Command::QualifyTestnet {
+            circle_testnet_usdc,
             endpoint,
             chain_id,
             sender,
             receiver,
             amount,
         } => {
-            let report = tap_sui::qualification::qualify_testnet(
-                &endpoint, chain_id, sender, receiver, amount,
+            let policy = if circle_testnet_usdc {
+                DirectAssetPolicy::CircleTestnetUsdc
+            } else {
+                DirectAssetPolicy::PinnedUsdc
+            };
+            let report = tap_sui::qualification::qualify_testnet_with_policy(
+                &endpoint, chain_id, sender, receiver, amount, policy,
             )
             .await?;
             println!("{}", serde_json::to_string_pretty(&report)?);

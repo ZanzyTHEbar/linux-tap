@@ -1,5 +1,5 @@
-//! Read-only qualification of the existing template, never asset substitution or signing.
-use super::{build_direct, client, probe, verify_template};
+//! Read-only qualification with explicit asset policy, never automatic substitution or signing.
+use super::{build_direct_with_policy, client, probe, verify_template_with_policy};
 use anyhow::{Context, Result, ensure};
 use serde::Serialize;
 use std::time::Duration;
@@ -12,7 +12,7 @@ use sui_rpc::{
     },
 };
 use sui_sdk_types::{Address, Digest, Transaction};
-use tap_core::{Invoice, USDC};
+use tap_core::{DirectAssetPolicy, Invoice};
 
 #[derive(Serialize)]
 pub struct Qualification {
@@ -42,6 +42,27 @@ pub async fn qualify_testnet(
     receiver: Address,
     amount: u64,
 ) -> Result<Qualification> {
+    qualify_testnet_with_policy(
+        endpoint,
+        expected_chain,
+        sender,
+        receiver,
+        amount,
+        DirectAssetPolicy::PinnedUsdc,
+    )
+    .await
+}
+
+/// The alternate asset is opt-in and bound to the fixed testnet genesis, not a network name.
+pub async fn qualify_testnet_with_policy(
+    endpoint: &str,
+    expected_chain: Digest,
+    sender: Address,
+    receiver: Address,
+    amount: u64,
+    policy: DirectAssetPolicy,
+) -> Result<Qualification> {
+    let asset = policy.coin_type();
     let node = probe(endpoint).await?;
     ensure!(node.chain.as_deref() == Some("testnet"), "testnet required");
     ensure!(
@@ -52,18 +73,18 @@ pub async fn qualify_testnet(
         chain: expected_chain.into_inner(),
         id: [0; 16],
         receiver: receiver.into_inner(),
-        coin_type: USDC.into(),
+        coin_type: asset.into(),
         amount,
         created_ms: 0,
         expires_ms: 0,
         merchant: "READ-ONLY QUALIFICATION; NOT A PAYMENT REQUEST".into(),
     };
-    let tx = build_direct(&invoice, sender, node.epoch, 0)?;
-    verify_template(&invoice, &tx)?;
+    let tx = build_direct_with_policy(&invoice, sender, node.epoch, 0, policy)?;
+    verify_template_with_policy(&invoice, &tx, policy)?;
     let mut report = Qualification {
         endpoint: endpoint.into(),
         node,
-        asset: USDC,
+        asset,
         sender,
         receiver,
         amount,
@@ -118,7 +139,7 @@ pub async fn qualify_testnet(
                     .as_array()
                     .is_some_and(|rows| {
                         rows.iter().any(|row| {
-                            row[0].as_str() == Some(USDC)
+                            row[0].as_str() == Some(asset)
                                 && row[1]
                                     .as_str()
                                     .and_then(|s| s.parse::<u64>().ok())
@@ -138,7 +159,7 @@ pub async fn qualify_testnet(
         Err(_) => report.blockers.push("protocol read timed out".into()),
     }
     let mut coin_req = GetCoinInfoRequest::default();
-    coin_req.coin_type = Some(USDC.into());
+    coin_req.coin_type = Some(asset.into());
     match tokio::time::timeout(
         Duration::from_secs(15),
         c.state_client().get_coin_info(coin_req),
@@ -147,7 +168,7 @@ pub async fn qualify_testnet(
     {
         Ok(Ok(r)) => {
             let coin = r.into_inner();
-            if coin.coin_type.as_deref() != Some(USDC)
+            if coin.coin_type.as_deref() != Some(asset)
                 || coin.metadata.as_ref().and_then(|m| m.decimals) != Some(6)
             {
                 report
@@ -165,7 +186,7 @@ pub async fn qualify_testnet(
     }
     let mut balance_req = GetBalanceRequest::default();
     balance_req.owner = Some(sender.to_string());
-    balance_req.coin_type = Some(USDC.into());
+    balance_req.coin_type = Some(asset.into());
     match tokio::time::timeout(
         Duration::from_secs(15),
         c.state_client().get_balance(balance_req),
@@ -175,7 +196,7 @@ pub async fn qualify_testnet(
         Ok(Ok(r)) => {
             report.balance = r.into_inner().balance;
             if !report.balance.as_ref().is_some_and(|b| {
-                b.coin_type.as_deref() == Some(USDC)
+                b.coin_type.as_deref() == Some(asset)
                     && b.address_balance.is_some_and(|n| n >= amount)
             }) {
                 report.blockers.push("insufficient or unknown pinned USDC address balance (coin objects do not qualify)".into());
@@ -226,6 +247,10 @@ pub async fn qualify_testnet(
         after.chain_id == report.node.chain_id,
         "chain changed during qualification"
     );
+    ensure!(
+        after.chain.as_deref() == Some("testnet"),
+        "testnet required"
+    );
     if after.epoch != report.node.epoch {
         report
             .blockers
@@ -240,14 +265,21 @@ fn verify_simulation(tx: &Transaction, simulation: &SimulateTransactionResponse)
         .transaction
         .as_ref()
         .context("missing simulated transaction")?;
-    let observed: Transaction = executed
+    let returned = executed
         .transaction
         .as_ref()
-        .context("missing simulated bytes")?
-        .try_into()?;
+        .context("missing simulated bytes")?;
+    let observed: Transaction = returned.try_into()?;
     ensure!(observed == *tx, "simulation changed transaction");
+    let expected_digest = tx.digest().to_string();
+    // Simulation populates Transaction.digest, but may omit ExecutedTransaction.digest.
+    // Require the inner digest and effects to match our SDK digest; reject a conflicting wrapper.
     ensure!(
-        executed.digest.as_deref() == Some(tx.digest().to_string().as_str()),
+        returned.digest.as_deref() == Some(expected_digest.as_str())
+            && executed
+                .digest
+                .as_deref()
+                .is_none_or(|digest| digest == expected_digest),
         "simulation digest mismatch"
     );
     let effects = executed
@@ -255,7 +287,7 @@ fn verify_simulation(tx: &Transaction, simulation: &SimulateTransactionResponse)
         .as_ref()
         .context("missing simulation effects")?;
     ensure!(
-        effects.transaction_digest == executed.digest,
+        effects.transaction_digest.as_deref() == Some(expected_digest.as_str()),
         "simulation effects digest mismatch"
     );
     ensure!(

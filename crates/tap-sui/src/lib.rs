@@ -16,7 +16,7 @@ use sui_sdk_types::{
     ProgrammableTransaction, Transaction, TransactionExpiration, TransactionKind, TypeTag,
     UserSignature, WithdrawFrom,
 };
-use tap_core::{Invoice, USDC};
+use tap_core::{DirectAssetPolicy, Invoice};
 
 pub mod qualification;
 
@@ -28,10 +28,18 @@ pub fn build_direct(
     epoch: u64,
     nonce: u32,
 ) -> Result<Transaction> {
-    ensure!(
-        invoice.coin_type == USDC,
-        "only the qualified-candidate USDC type is enabled"
-    );
+    build_direct_with_policy(invoice, sender, epoch, nonce, DirectAssetPolicy::PinnedUsdc)
+}
+
+// The explicit alternate profile is qualification-only; signing keeps its default policy.
+pub(crate) fn build_direct_with_policy(
+    invoice: &Invoice,
+    sender: Address,
+    epoch: u64,
+    nonce: u32,
+    policy: DirectAssetPolicy,
+) -> Result<Transaction> {
+    policy.validate(invoice)?;
     ensure!(
         invoice.amount >= 10_000,
         "USDC amount below documented 0.01 minimum"
@@ -81,6 +89,14 @@ pub fn build_direct(
 
 /// Rebuild the only allowed template. Rejects extra commands, other recipients and gas changes.
 pub fn verify_template(invoice: &Invoice, tx: &Transaction) -> Result<()> {
+    verify_template_with_policy(invoice, tx, DirectAssetPolicy::PinnedUsdc)
+}
+
+pub(crate) fn verify_template_with_policy(
+    invoice: &Invoice,
+    tx: &Transaction,
+    policy: DirectAssetPolicy,
+) -> Result<()> {
     let (epoch, nonce) = match tx.expiration {
         TransactionExpiration::ValidDuring {
             min_epoch: Some(min),
@@ -91,7 +107,7 @@ pub fn verify_template(invoice: &Invoice, tx: &Transaction) -> Result<()> {
         _ => anyhow::bail!("unsupported transaction expiration"),
     };
     ensure!(
-        *tx == build_direct(invoice, tx.sender, epoch, nonce)?,
+        *tx == build_direct_with_policy(invoice, tx.sender, epoch, nonce, policy)?,
         "transaction does not match invoice template"
     );
     Ok(())
@@ -259,6 +275,7 @@ pub fn verify_execution(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tap_core::USDC;
     fn inv() -> Invoice {
         Invoice {
             chain: [42; 32],

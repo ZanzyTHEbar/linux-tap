@@ -16,7 +16,7 @@ funded multi-person programme.
 | B08 | Reuse Linux card-emulation interface | nfcd bridge and upstream XML | Software bridge only |
 | B09 | Test Unix socket transport on your Omarchy host | Same smoke scenario over real private sockets | Linux socket demo verified; Omarchy host pending |
 | B10 | Qualify actual Sui gRPC access | Saved genesis identity, epoch and endpoint policy | Read-only public testnet verified; see testnet-qualification.md |
-| B11 | Qualify gasless native USDC shape | Live dry-run, live protocol configuration and address-balance funding evidence | Blocked: pinned asset absent/not gasless-allowed on testnet; checked simulation rejected |
+| B11 | Qualify gasless native USDC shape | Live dry-run, live protocol configuration and address-balance funding evidence | Default asset rejected; explicit Circle testnet shape simulated with existing public address; fresh-wallet funding/conversion still blocked |
 | B12 | Propose offline-builder fix upstream | Minimal reproducer and reviewed patch | Reproducer done; not posted |
 | B13 | Add capability-driven preparation | Wrong network/protocol/asset fails before signing | Read-only qualification gate added; signing integration still open |
 | B14 | Add controlled submission and reconciliation | Persisted exact bytes, no replacement on timeout, successful checkpoint verification | Open |

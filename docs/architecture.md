@@ -60,8 +60,12 @@ but no chain result has been manufactured to make the simulator look live. The s
 read-only `qualify-testnet` command now checks protocol configuration, exact asset
 metadata, address-balance funding and checked simulation of `build_direct`.
 It constructs diagnostic unsigned terms, not an authenticated payment request;
-it does not relax invoice pins, signing or receipt predicates. Qualification
-failed for the pinned asset on testnet, so submission remains unimplemented.
+it does not relax invoice pins, signing or receipt predicates. The default
+pinned asset fails on testnet. Explicit Circle testnet qualification uses the
+same bounded template and reconstruction with a separate exact type/genesis
+policy; that path is not exposed by the signer or receipt verifier. A successful
+simulation from a pre-existing funded public address is not fresh-wallet or
+settlement evidence. Conversion and submission remain unimplemented.
 Hardware profiles, fresh merchant custody addresses, production recovery and
 Qt approval remain explicit backlog items.
 

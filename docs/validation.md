@@ -80,6 +80,51 @@ Successful simulation response validation compiles but lacks live success
 evidence. The earlier mock receipt predicates remain mock evidence only.
 Reader/vendor code was unchanged; PC/SC and physical hardware were not retested.
 
+## Explicit Circle testnet configuration (22 October 2026)
+
+- Workmux's `oc2` profile runs interactive OpenCode V2 via
+  `$HOME/.opencode/bin/opencode2`; `oc2` is a profile, not a shell binary.
+- Independently read Circle's official [type registry](https://developers.circle.com/stablecoins/usdc-contract-addresses)
+  and [faucet information](https://faucet.circle.com/). The exact Sui Testnet
+  type agrees with live six-decimal metadata and protocol 139's lossless allowlist.
+  No symbol-based identity or automatic cross-network asset allowance was added.
+- `bash scripts/check.sh`: passed formatting, Clippy with warnings denied, all
+  15 existing tests, native CLI build and pipe smoke (`chain_submission: false`).
+  Existing tests/smoke sign public offline fixtures only; no new tests were added.
+- `cargo build --locked -p tap-cli`: passed with unchanged SDK/dependency pins.
+- Ran the explicit public-address command in [the qualification guide](testnet-qualification.md):
+  exit 0, `qualified: true`, `chain_submission: false`, epoch 1260, checkpoint
+  397916564. Address `0x0` already had 3,400,000 test USDC address-balance units.
+  The [saved excerpt](evidence/circle-testnet-qualification-2026-10-22.json) was
+  recursively compared with retained fields in the full live report: matched.
+- The initial live run exposed an existing verifier/API mismatch: simulation
+  omits outer `ExecutedTransaction.digest`, but supplies the inner transaction
+  digest and effects transaction digest. The pinned protobuf declares these
+  separate optional fields. The verifier now requires the inner digest and
+  effects digest to equal the SDK digest, rejects any conflicting outer digest,
+  and still requires identical SDK transaction bytes and successful effects.
+  The subsequent live run above passed those checks; receipt verification is unchanged.
+- Also ran the guide's original command **without** the explicit flag: exit 1,
+  unchanged mainnet-type rejection on testnet. No substitution occurred.
+- Ran the explicit command with `--chain-id 11111111111111111111111111111111`:
+  exit 1, `chain pin mismatch`. With `--amount 9999`: exit 1, minimum rejection.
+  With `--sender 0x42 --receiver 0x1 --amount 10000`: exit 1, insufficient
+  address balance and checked simulation rejected the unfunded withdrawal.
+  All other arguments matched the documented explicit command. A diagnostic
+  `--sender 0x1 --receiver 0x2` run also passed; that address was already funded too.
+- `target/debug/linux-tap qualify-testnet --help` and `git diff --check`: passed.
+
+This is **existing-public-address simulation**, not fresh-wallet funding,
+control of those public addresses, live execution or settlement. No keys were
+created/imported, no faucet request was made, and no real transaction was signed
+or broadcast. The research worker separately reported a coin-to-address conversion
+simulation; it was not rerun here or turned into a submission implementation.
+Fresh-wallet validation awaits user-operated local key provisioning and faucet
+CAPTCHA. Coin-object conversion, signing-profile integration, submission and
+reconciliation remain blockers to end-to-end checkout. See the guide for exact
+commands and stop conditions. Reader/vendor code is unchanged; PC/SC, physical
+NFC, hardware approval and Omarchy-host qualification were not retested.
+
 ## Earlier bootstrap environment limitations
 
 The earlier bootstrap runner rejected Unix socket binding with EPERM, so that

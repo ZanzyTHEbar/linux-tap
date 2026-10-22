@@ -9,10 +9,44 @@ use sui_crypto::{
     Signer, Verifier,
     ed25519::{Ed25519PrivateKey, Ed25519VerifyingKey},
 };
-use sui_sdk_types::{Ed25519PublicKey, Ed25519Signature, TypeTag};
+use sui_sdk_types::{Digest, Ed25519PublicKey, Ed25519Signature, TypeTag};
 
 pub const USDC: &str =
     "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC";
+/// Circle's official Sui testnet type; never an alias for the default asset.
+pub const CIRCLE_TESTNET_USDC: &str =
+    "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC";
+pub const SUI_TESTNET_CHAIN: &str = "69WiPg3DAQiwdxfncX6wYQ2siKwAe6L9BZthQea3JNMD";
+
+/// Explicit local asset policy, independent of a merchant's untrusted display label.
+#[derive(Clone, Copy, Debug)]
+pub enum DirectAssetPolicy {
+    PinnedUsdc,
+    CircleTestnetUsdc,
+}
+
+impl DirectAssetPolicy {
+    pub fn coin_type(self) -> &'static str {
+        match self {
+            Self::PinnedUsdc => USDC,
+            Self::CircleTestnetUsdc => CIRCLE_TESTNET_USDC,
+        }
+    }
+
+    pub fn validate(self, invoice: &Invoice) -> Result<()> {
+        ensure!(
+            invoice.coin_type == self.coin_type(),
+            "asset policy mismatch"
+        );
+        if matches!(self, Self::CircleTestnetUsdc) {
+            ensure!(
+                Digest::new(invoice.chain) == SUI_TESTNET_CHAIN.parse::<Digest>()?,
+                "Circle testnet USDC requires pinned Sui testnet genesis"
+            );
+        }
+        Ok(())
+    }
+}
 pub const MAX_CORE: usize = 2048;
 pub const MAX_ENVELOPE: usize = 8192;
 const DOMAIN: &[u8] = b"linux-sui-tap/invoice/v0\0";

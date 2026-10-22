@@ -19,7 +19,7 @@ The coordinator must supply those documents before full requirement acceptance.
 | Merchant authentication and narrow approved terms | Invoice signature checked against a pinned key; exact transaction reconstruction | Display the public laboratory pin, full asset, amount and recipient before typed approval; no verified-business claim |
 | Durable retry without duplicate signing | Exact signed bytes journaled before sending; simulated merchant ledger | Exit before send, restart both processes, compare stored bytes, replay and retain one simulated payment |
 | Reproducible Omarchy demonstration | Existing pipe smoke test; socket transport lacked runtime evidence | Guided private-socket runner and these setup/recording instructions; actual Omarchy host qualification still required |
-| Real Sui gasless USDC checkout and settlement | Offline template; read-only RPC predicate; checked testnet simulation rejects pinned asset | **Blocked live capability.** See [testnet qualification](testnet-qualification.md); no settlement or broadcast |
+| Real Sui gasless USDC checkout and settlement | Default asset rejected; explicit Circle testnet profile simulates with an existing funded public address | **Blocked live capability.** See [fresh-wallet prerequisites](testnet-qualification.md); no settlement or broadcast |
 | Production custody, recovery and trusted approval | Public development fixture signer only | **Missing.** Terminal approval is host software, not isolated custody or trusted hardware display |
 | Native Qt Quick confirmation | Selected in B21, not implemented | **Missing.** This slice is a native CLI, not the finalized graphical wallet |
 | Physical NFC and commercial acceptance | APDU software reconstruction; optional PC/SC client | **Missing.** No physical tap, timing, qualified adapter or POS acceptance claim |
@@ -27,9 +27,10 @@ The coordinator must supply those documents before full requirement acceptance.
 | Omarchy packaging / merchant SDK product | Rust reference modules; no system package or stable SDK distribution | **Incomplete.** Local source build only; no daemon install, permissions changes or desktop integration |
 
 This implements only the runnable software-demo slice. Subsequent testnet-only
-qualification failed; no asset switch or submission work was authorized past
-that failed gate. A specific live trial would also need separate coordinator
-authorization after successful qualification. The missing
+qualification failed for the default asset. A separately approved explicit
+Circle testnet configuration now supports read-only qualification, not a changed
+demo or signing policy. A specific live trial still needs separate authorization
+after fresh-wallet qualification and review. The missing
 production and hardware requirements remain blockers to a full wallet launch.
 
 ## Set up on Arch / Omarchy
