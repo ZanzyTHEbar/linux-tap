@@ -13,7 +13,7 @@
       "url": "https://github.com/MystenLabs/skills.git",
       "rev": "e31b38016723e2dcee36161d59c50e028e13b52a",
       "license": "Apache-2.0",
-      "role": "Selected unmodified agent skills bundled"
+      "role": "External reviewed agent guidance; not bundled or required to build"
     },
     {
       "name": "nfcd",

@@ -282,8 +282,11 @@ cargo run --locked -p tap-cli --features pcsc-reader -- readers
 With a qualified card-emulation device running our laboratory application:
 
 ```sh
+umask 077
+PUBLIC_INVOICE="$(mktemp)"
+cargo run --quiet --locked -p tap-cli --example fixture > "$PUBLIC_INVOICE"
 cargo run --locked -p tap-cli --features pcsc-reader -- nfc-push \
-  --input fixtures/invoice.json --reader 'EXACT READER NAME'
+  --input "$PUBLIC_INVOICE" --reader 'EXACT READER NAME'
 ```
 
 Success means invoice transport acknowledgement only. The fixture is expired
@@ -329,8 +332,11 @@ integration. Open software does not make USDC issuance or NFC firmware decentral
 Cargo.lock pins transitive dependencies; deps/upstreams.lock.json pins source
 stepping stones. `python3 scripts/fetch_upstreams.py nfcd pn7160` downloads those
 specific revisions for inspection without building, flashing or installing them.
-Selected official Mysten skills are bundled unmodified under `.agents/skills`.
-See [THIRD_PARTY.md](THIRD_PARTY.md) for their provenance and license boundaries.
+Official [Mysten guidance](https://github.com/MystenLabs/skills) is an external
+reference, not bundled in this repository. See [THIRD_PARTY.md](THIRD_PARTY.md)
+for provenance and license boundaries. Public fixture input is generated at runtime
+by the existing `fixture` example; local agent assets, media and fixture directories
+are intentionally ignored and are not required by a fresh clone.
 
 New project code is Apache-2.0. Third-party source and system dependencies retain
 their own licenses. This is a development bootstrap, not an audited wallet.

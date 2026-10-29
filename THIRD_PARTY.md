@@ -26,17 +26,18 @@ distribution requirements and are not included as binaries.
 
 ## Copied unmodified source
 
-- `.agents/skills` contains five selected skill directories and reference files
-  from MystenLabs/skills at e31b38016723e2dcee36161d59c50e028e13b52a.
-  Its Apache-2.0 license is retained at `.agents/skills/LICENSE`.
-  deps/mysten-skills.sha256.json records checksums of all 25 included files.
-  Evaluation datasets are omitted; included guidance files are unchanged.
 - `upstream/interfaces` contains LocalHostApp and Daemon XML from sailfishos/nfcd
   at 6fc7aa906df5b6f2c508aab1832c51827095586e. Its BSD-3-Clause license and
   copyright notices are retained in nfcd-LICENSE. The bridge implements this
   existing interface; it does not include the daemon binary or hardware plugins.
 
 ## Reviewed source stepping stones
+
+Official [Mysten guidance](https://github.com/MystenLabs/skills) at revision
+e31b38016723e2dcee36161d59c50e028e13b52a is an external Apache-2.0 reference,
+not distributed guidance or a build dependency. `deps/mysten-skills.sha256.json`
+retains the reviewed 25-file upstream checksum inventory, not a claim that those
+files or their license are bundled here. Consult the upstream license for reuse.
 
 deps/upstreams.lock.json records exact reviewed revisions for the SDK, official
 guidance, nfcd, the NXP PN7160 branch, pcsc-rust and CXX-Qt. The fetch script only

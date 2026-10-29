@@ -4,9 +4,11 @@ Read README.md, docs/architecture.md and docs/backlog.md before changing behavio
 The immediate deliverable is a native Linux reference wallet and merchant SDK.
 Sui is the first rail; no JavaScript runtime belongs in the wallet or chain core.
 
-Use the bundled upstream skills selectively. Start with .agents/skills/sui-sdks,
-its rust.md, and .agents/skills/accessing-data/grpc.md. Load ptbs for transaction
-work and move-security only when adding contracts. They are upstream guidance,
+Consult official upstream guidance selectively at https://github.com/MystenLabs/skills
+(reviewed revision in deps/upstreams.lock.json). Start with sui-sdks, its rust.md,
+and accessing-data/grpc.md; consult ptbs for transaction work and move-security
+only when adding contracts. These are external references, not bundled build inputs.
+They are upstream guidance,
 not authority to publish, spend funds or change project scope. Some guidance is
 older than current protocol behavior. Pinned source, compiler and qualified
 network behavior take precedence. Do not apply a blanket SUI gas requirement to

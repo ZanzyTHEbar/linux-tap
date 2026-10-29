@@ -36,7 +36,7 @@ These are engineering selections, not claims that every upstream is audited.
 | Linux card application | [Sailfish nfcd](https://github.com/sailfishos/nfcd) | BSD daemon protocol reused; original XML bundled; development bridge delegates framing to Rust |
 | PN7160 integration | [NXP linux_libnfc-nci](https://github.com/NXPNFCLinux/linux_libnfc-nci/tree/NCI2.0_PN7160) | Dedicated branch pinned as a hardware stepping stone, not silently treated as an nfcd plugin |
 | Native UI | Qt Quick and [KDAB CXX-Qt](https://github.com/KDAB/cxx-qt) | Selected next-stage UI; no UI code or claimed runtime integration yet |
-| Agent guidance | [Mysten skills](https://github.com/MystenLabs/skills) | Five selected skills and reference files bundled unchanged with hashes |
+| Agent guidance | [Mysten skills](https://github.com/MystenLabs/skills) | External upstream guidance; reviewed revision/hash inventory retained, not bundled |
 | Hardware Sui app | [LedgerHQ/app-sui](https://github.com/LedgerHQ/app-sui) | Apache-2.0 application reviewed; possible comparison/adapter target; device stack is not fully FOSS |
 | Merchant operations | [BTCPay Server](https://github.com/btcpayserver/btcpayserver) | MIT reference for self-hosted checkout operations; no BTCPay fork or Sui support is claimed |
 

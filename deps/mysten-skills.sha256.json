@@ -1,6 +1,7 @@
 {
   "repository": "https://github.com/MystenLabs/skills",
   "revision": "e31b38016723e2dcee36161d59c50e028e13b52a",
+  "scope": "External upstream reference inventory; these guidance files are not bundled or required to build",
   "files": {
     "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
     "accessing-data/SKILL.md": "b2bc3645a2f6f9625d2cfd58390ca39b4d31b25640109201f5bac4608404e1e7",

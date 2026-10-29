@@ -2,6 +2,7 @@
 """Validate the bridge interface and Rust subprocess; no D-Bus or NFC device needed."""
 import hashlib
 import importlib.util
+import subprocess
 import tempfile
 from pathlib import Path
 
@@ -11,7 +12,11 @@ module=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 def main():
-    payload=(ROOT/'fixtures/invoice.json').read_bytes()
+    # Generate the existing deterministic, expired public fixture; no local assets or keys.
+    payload=subprocess.run(
+        ['cargo','run','--quiet','--locked','-p','tap-cli','--example','fixture'],
+        cwd=ROOT,stdin=subprocess.DEVNULL,capture_output=True,check=True,timeout=120,
+    ).stdout
     with tempfile.TemporaryDirectory() as directory:
         output=Path(directory)/'unverified.json'
         app=module.HostApp(str(ROOT/'target/debug/linux-tap'),str(output))

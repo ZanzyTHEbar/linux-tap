@@ -1,5 +1,14 @@
 # Validation record
 
+## Privacy rewrite candidate — fresh-clone validation pending
+
+Local agent/media/fixture directories and legacy bootstrap/history artifacts are
+excluded from rewritten history; local copies are retained privately. Project
+commit identities use the public account's GitHub noreply identity. Incidental
+operator paths are redacted. Existing chain evidence and upstream license
+attributions are preserved. Only source/static checks are authorized in this phase;
+fresh-clone builds and independent review must complete before any lease-guarded push.
+
 ## Execution-response-loss candidate: offline native guards validated
 
 29 October 2026: contract settled by coordinator engineering. Preserve the pinned
