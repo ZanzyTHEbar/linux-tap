@@ -1,6 +1,6 @@
 # Validation record
 
-## Privacy rewrite candidate — fresh-clone checks pass; privacy review pending
+## Privacy rewrite — fresh-clone checks and independent privacy review complete
 
 Local agent/media/fixture directories and legacy bootstrap/history artifacts are
 excluded from rewritten history; local copies are retained privately. Project
@@ -8,7 +8,7 @@ commit identities use the public account's GitHub noreply identity. Incidental
 operator paths are redacted. Existing chain evidence and upstream license
 attributions are preserved. The isolated rewrite removed 39 distinct historical
 paths and normalized all 14 original author/committer identity fields. Local asset
-copies remain unchanged; no public rewrite has been pushed yet. GitHub caches,
+copies are retained unchanged outside the rewritten history. GitHub caches,
 old commit views and third-party clones may retain published history after a push;
 owner action with GitHub Support may be needed for cached copies.
 
@@ -26,13 +26,24 @@ passed these offline checks with `CARGO_BUILD_JOBS=4` and `TMPDIR=/tmp/opencode`
   Actual native `apdu-roundtrip` on that generated input passed, **exit 0**.
 - Both proxy `node --check` commands and Python AST/link checks passed. The
   bridge harness retains all eight original assertions and no longer reads the
-  excluded fixture directory. Its full D-Bus interface scenario was **not run**:
-  the declared `dbus-next` dependency and pip are unavailable here; no package was
-  installed and no validator/interface was mocked. CI installs that dependency
-  explicitly; runtime fixture/APDU success is not a claim of full bridge CI success.
+  excluded fixture directory. The base interpreter initially lacked `dbus-next`
+  and pip, so that initial run did not exercise the full bridge interface.
+- Subsequently, the authorized private `uv` environment installed only
+  `adapters/nfcd/requirements.txt` (`dbus-next==0.2.3`). The offline cache was empty;
+  a bounded ordinary package fetch with normal TLS verification succeeded. No
+  global/system package installation or source/assertion changes were made.
+  With the same offline Cargo environment, the private interpreter ran
+  `scripts/test_nfcd_bridge.py` against the fresh validation clone: **exit 0,
+  all eight original assertions passed**, including the actual interface
+  signatures and Rust pipe bridge using the runtime-generated fixture. No
+  interface or validator was mocked. This does not test live D-Bus registration,
+  NFC hardware, RPC or funded execution.
 
-Independent privacy review and resolution of the bridge validation gap precede
-any lease-guarded push. No real keys/journals, node RPC or funded execution was used.
+Independent privacy review of the sanitized history, preserved local assets and
+public README completed with no material findings. The subsequently resolved
+bridge gate and documentation-only update preserve that reviewed source scope.
+Publication uses an explicit expected-old-SHA lease, never an unguarded force or
+mirror push. No real keys/journals, node RPC or funded execution was used.
 
 ## Execution-response-loss candidate: offline native guards validated
 

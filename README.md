@@ -4,6 +4,30 @@ Native Rust wallet and merchant reference tools for exploring contactless
 stablecoin payments on Linux, with Sui as the first settlement network.
 This is an experimental implementation, not a polished wallet or stable merchant SDK.
 
+## Built with
+
+<table>
+  <tr>
+    <td align="center" width="180">
+      <a href="https://sui.io"><img src="https://docs.sui.io/img/logo.svg" alt="Sui logo" width="48" height="48"></a><br>
+      <strong>Sui</strong><br><sub>First settlement rail</sub>
+    </td>
+    <td align="center" width="180">
+      <a href="https://rust-lang.org"><img src="https://raw.githubusercontent.com/rust-lang/rust-artwork/7b54b6689dc310db2f301d7bcda847f016bd447c/logo/rust-logo-white-outline.svg" alt="Rust logo" width="48" height="48"></a><br>
+      <strong>Rust</strong><br><sub>Native wallet core</sub>
+    </td>
+    <td align="center" width="180">
+      <a href="https://sqlite.org"><img src="https://www.sqlite.org/images/sqlite370_banner.svg" alt="SQLite logo" width="107" height="48"></a><br>
+      <strong>SQLite</strong><br><sub>Durable journals</sub>
+    </td>
+  </tr>
+</table>
+
+Logos are hosted by their projects and identify integrations, not endorsement.
+The unmodified [Rust logo](https://github.com/rust-lang/rust-artwork/tree/7b54b6689dc310db2f301d7bcda847f016bd447c/logo)
+is credited to the Rust project under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/);
+[Rust's trademark policy](https://rustfoundation.org/policy/rust-trademark-policy/) also applies.
+
 ## Why it exists
 
 A contactless payment should be inspectable from the request through settlement.
