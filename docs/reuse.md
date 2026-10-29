@@ -1,5 +1,23 @@
 # Reuse audit
 
+## Addendum — 28 October 2026
+
+See the [current research reports](research/README.md) for updated reuse,
+native Linux phone/NFC and transport-security findings.
+
+This addendum supersedes the historical Gem core license caution below:
+the inspected current monorepo `core/LICENSE` is MIT; the app's top-level
+GPL license remains separately scoped. Neither license should be applied
+indiscriminately across the repository. This clarification is not automatic
+adoption, a wallet-fork decision or permission to copy unreviewed files.
+
+The user-selected immediate milestone is an integrated emulated APDU invoice →
+wallet-verified invoice and explicit approval → lost payment receipt/restart →
+replay of the exact signed bytes → one simulated receipt. This is not live
+payment or RF proof and does not change backlog capability states.
+
+## 22 October 2026 review (historical)
+
 Reviewed 22 October 2026. The decision is to assemble a narrow application around
 maintained components, rather than fork a complete wallet and replace its chain.
 These are engineering selections, not claims that every upstream is audited.
