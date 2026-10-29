@@ -1,0 +1,65 @@
+{
+  "record_kind": "sanitized_public_sqlite_qualification_not_power_loss_proof",
+  "result": "PASS_SCOPED_SQLITE_FOUNDATION",
+  "verified_utc": "2026-10-29T10:40:33.382674Z",
+  "dependency_selection": {"rusqlite": "0.39.0", "libsqlite3_sys": "0.37.0", "linkage": "bundled static sqlite3"},
+  "prior_selection": {"sqlite": "3.50.2", "basis": "locked amalgamation and retained build output, not old executable runtime SQL", "baseline_race_reproduced": false},
+  "official_sources": [
+    {"url": "https://sqlite.org/releaselog/3_51_3.html", "http_status": 200, "retrieved_utc": "2026-10-29T10:37:30.412097Z", "retained_html_sha256": "796996305c91c07d490f797d63b22a6e6e28d4d571a28e8ccaebef685e1beab8"},
+    {"url": "https://sqlite.org/wal.html", "http_status": 200, "retrieved_utc": "2026-10-29T10:37:30.987574Z", "retained_html_sha256": "f3467b530b883d4a00574fe1a898b3d121ed72764ae28cf66941080ac0badb9e"}
+  ],
+  "source_qualification": {
+    "wal_reset_fix_original_commit": "7168988acbec2d8d51106a263e553f8942b8b23d983dbbe5028e0f9be68cbb83",
+    "sqlite3_c_sha3_256": "32d5424f97e0a7fc5ed2f6335afbb58be4e0298bd7117a34e39d345ff13d859e",
+    "amalgamation_matches_official_release": true,
+    "checkpoint_salt_recheck_present": true,
+    "advisory": "WAL-reset race through 3.51.2; fixed in 3.51.3 and specified backports; two or more connections concurrently write/checkpoint",
+    "cooperative_owner_lock_proves_immunity": false
+  },
+  "native_runtime": {
+    "command": "linux-tap storage-info",
+    "exit_code": 0,
+    "sqlite_version": "3.51.3",
+    "sqlite_source_id": "2026-03-13 10:38:09 737ae4a34738ffa0c3ff7f9bb18df914dd1cad163f28fd6b6e114a344fe6d618",
+    "database": "memory",
+    "scope": "Library identity only; no file WAL, checkpoint or power-loss qualification",
+    "compile_options_count": 51,
+    "selected_compile_options": ["THREADSAFE=1", "MUTEX_PTHREADS", "DEFAULT_SYNCHRONOUS=2", "DEFAULT_WAL_SYNCHRONOUS=2", "DEFAULT_WAL_AUTOCHECKPOINT=1000", "ENABLE_API_ARMOR"],
+    "full_options_retained": true
+  },
+  "file_fixture": {
+    "flow": "Existing native pipe smoke: save-before-send interruption, process restart, exact duplicate replay",
+    "new_public_fixture_only": true,
+    "native_stages": 3,
+    "native_wallet_merchant_processes": 6,
+    "native_store_guard": {"journal_mode": "wal", "synchronous": 2, "basis": "Store::open successfully checked effective PRAGMAs before schema setup in each native CLI process"},
+    "python_readonly_inspector_sqlite_version": "3.46.1",
+    "python_role": "Fixture row inspection, not native runtime identity or checkpoint implementation",
+    "wallet_wal_absent_after_each_native_close": true,
+    "exact_artifact_after_checkpoint_reopen": true,
+    "duplicate_preserved_all_rows": true,
+    "merchant_preserved_exact_artifact": true,
+    "prepared_count": 1,
+    "simulated_merchant_payment_count": 1,
+    "simulated_wallet_receipt_count": 1,
+    "testnet_rows": 0,
+    "prepared_json_sha256": "ded7ab67cfd522144e12e4285c56c107c55f4f5a001231dc4e950cd9e4f43691",
+    "bcs_sha256": "694f6791bfacbc40eb8dfe257344ea73fc1d09cb3e54c6365812e130512e4730",
+    "signature_bytes_sha256": "0af2f3b9b8aa38aaabeae736c51666aef37ac5121fc0f2f2eb461c9e67e740b8"
+  },
+  "checks": {
+    "offline_default_format_clippy_tests_build_smoke": "PASS",
+    "existing_tests_default": 15,
+    "existing_tests_pcsc_feature": 15,
+    "final_pcsc_build": "PASS",
+    "recorded_process_identities_stopped": 12,
+    "owned_runtimes_remaining": 0,
+    "source_review": "Source and post-validation runtime review completed 29 October 2026 by ses_e78c83a42ffeCR2AuKWE6yCZYD: no corrective change required, no blocking/material P1/P2; scoped qualification, not a security audit"
+  },
+  "final_binary": {"version": "tap-cli 0.1.0", "features": ["default", "pcsc-reader"], "bytes": 159796368, "sha256": "eb95ae3297a0fd332f6dac73f47c437260f867bf5ff01426dd3d1af5cd02fb28"},
+  "preserved_payment_evidence_sha256": {
+    "emulated-testnet-checkout-2026-10-29.json": "3568c28c5cc9eabed429b780de7418fa8f1d8c7bb567bc8e78384d96ffae5098",
+    "emulated-testnet-recovery-2026-10-29.json": "1bfceaa1ff16fb94eaa37eef8ca96e9e1bab5371055e6d924cebe44a49b4de7f"
+  },
+  "limits": {"wal_reset_race_reproduced": false, "upstream_instrumented_regression_run": false, "wire_loss_tested": false, "host_crash_tested": false, "power_cut_tested": false, "filesystem_durability_certified": false, "live_rpc": false, "chain_submission": false, "real_journals_opened": false, "production_custody_qualified": false, "b14_complete": false}
+}

@@ -1,5 +1,5 @@
 {
-  "generated_by": "cargo metadata --locked",
+  "generated_by": "cargo metadata --locked; SQLite dependency closure updated from checksum-verified crate manifests; optional PC/SC entries verified by offline Linux all-features metadata",
   "packages": [
     {
       "name": "anstream",
@@ -133,6 +133,13 @@
       "license": "MIT/Apache-2.0",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/Nullus157/bs58-rs"
+    },
+    {
+      "name": "bumpalo",
+      "version": "3.20.3",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/fitzgen/bumpalo"
     },
     {
       "name": "bytemuck",
@@ -360,7 +367,7 @@
     },
     {
       "name": "foldhash",
-      "version": "0.1.5",
+      "version": "0.2.0",
       "license": "Zlib",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/orlp/foldhash"
@@ -458,7 +465,7 @@
     },
     {
       "name": "hashbrown",
-      "version": "0.15.5",
+      "version": "0.16.1",
       "license": "MIT OR Apache-2.0",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/rust-lang/hashbrown"
@@ -472,10 +479,10 @@
     },
     {
       "name": "hashlink",
-      "version": "0.10.0",
+      "version": "0.11.1",
       "license": "MIT OR Apache-2.0",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
-      "repository": "https://github.com/kyren/hashlink"
+      "repository": "https://github.com/djc/hashlink"
     },
     {
       "name": "heck",
@@ -597,6 +604,13 @@
       "repository": "https://github.com/rust-lang/jobserver-rs"
     },
     {
+      "name": "js-sys",
+      "version": "0.3.106",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/wasm-bindgen/wasm-bindgen/tree/master/crates/js-sys"
+    },
+    {
       "name": "libc",
       "version": "0.2.191",
       "license": "MIT OR Apache-2.0",
@@ -605,7 +619,7 @@
     },
     {
       "name": "libsqlite3-sys",
-      "version": "0.35.0",
+      "version": "0.37.0",
       "license": "MIT",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/rusqlite/rusqlite"
@@ -672,6 +686,20 @@
       "license": "MIT OR Apache-2.0",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/polyfill-rs/once_cell_polyfill"
+    },
+    {
+      "name": "pcsc",
+      "version": "2.9.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/bluetech/pcsc-rust"
+    },
+    {
+      "name": "pcsc-sys",
+      "version": "1.3.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/bluetech/pcsc-rust"
     },
     {
       "name": "percent-encoding",
@@ -821,8 +849,15 @@
       "repository": "https://github.com/RoaringBitmap/roaring-rs"
     },
     {
+      "name": "rsqlite-vfs",
+      "version": "0.1.1",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": null
+    },
+    {
       "name": "rusqlite",
-      "version": "0.37.0",
+      "version": "0.39.0",
       "license": "MIT",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/rusqlite/rusqlite"
@@ -854,6 +889,13 @@
       "license": "ISC",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/rustls/webpki"
+    },
+    {
+      "name": "rustversion",
+      "version": "1.0.23",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/dtolnay/rustversion"
     },
     {
       "name": "semver",
@@ -945,6 +987,13 @@
       "license": "Apache-2.0 OR MIT",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/RustCrypto/formats/tree/master/spki"
+    },
+    {
+      "name": "sqlite-wasm-rs",
+      "version": "0.5.5",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/Spxg/sqlite-wasm-rs"
     },
     {
       "name": "strsim",
@@ -1239,6 +1288,34 @@
       "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "repository": "https://github.com/bytecodealliance/wasi"
+    },
+    {
+      "name": "wasm-bindgen",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/wasm-bindgen/wasm-bindgen"
+    },
+    {
+      "name": "wasm-bindgen-macro",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/wasm-bindgen/wasm-bindgen/tree/master/crates/macro"
+    },
+    {
+      "name": "wasm-bindgen-macro-support",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/wasm-bindgen/wasm-bindgen/tree/main/crates/macro-support"
+    },
+    {
+      "name": "wasm-bindgen-shared",
+      "version": "0.2.129",
+      "license": "MIT OR Apache-2.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/wasm-bindgen/wasm-bindgen/tree/master/crates/shared"
     },
     {
       "name": "webpki-roots",

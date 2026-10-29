@@ -1,0 +1,88 @@
+{
+  "record_kind": "sanitized_public_evidence_excerpt_not_test_fixture",
+  "milestone": "real_testnet_application_boundary_recovery",
+  "live_recovery_verified": true,
+  "scope": "Received execution success lost before persistence; committed credit interrupted before receipt export",
+  "human_runner_result": "PASS_REAL_TESTNET_APPLICATION_BOUNDARY_RECOVERY",
+  "initial_not_done_notice": "Unconditional start notice, not the final outcome",
+  "verified_utc": "2026-10-29T09:47:53.808602Z",
+  "verification_session": "ses_e7ccea915ffeYUiCnAyPFmRDnJ",
+  "source_capture_names": ["REPORT.md", "result.json", "retained-stage-facts.json", "source-file-sha256.json", "fresh-node-observation.json", "before-fresh-query.json", "after-fresh-query.json"],
+  "network": "Sui testnet only",
+  "trusted_endpoint": "https://fullnode.testnet.sui.io:443",
+  "genesis": "69WiPg3DAQiwdxfncX6wYQ2siKwAe6L9BZthQea3JNMD",
+  "asset": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+  "amount_base_units": 10000,
+  "amount_display": "0.01 USDC",
+  "transaction_digest": "52wFhV654LoLhXycxB5nxn3B2ddM4siC7Mm72opYt9sW",
+  "invoice_hash": "46bb3906abb57c66c4a5cf6b748442475dfb366a2b159712f274c13479be4829",
+  "checkpoint": 400484678,
+  "execution_epoch": 1267,
+  "sender": "0xb6b852118f51421abf2a930216ea62b88a283b5d0be7de326695bc23768d14f1",
+  "receiver": "0x17a092097c57532735709410bb22771b82e47f388f46f74026256d3388f997e0",
+  "merchant_pin": "88fd7ab199410d1905c9f6794ab7e6097f45b143941ed4911658b9d67a4c0f43",
+  "transport": {
+    "profile": "native nfc-push -> private AF_UNIX pcscd/vpcd -> thin VICC -> Rust receiver",
+    "protocol": "T=1", "atr_hex": "3b800181", "fixture_autoapproval": false,
+    "exact_invoice_inbox_candidate_and_transport_snapshots": true,
+    "shared_invoice_bytes_sha256": "b81f35189d7c805c88fb75bfc0977fea815ee257d4f0b23cfd1cd760d55cb70a"
+  },
+  "execution_binding": {
+    "full_saved_bcs_signature_digest_unchanged": true,
+    "retained_and_fresh_node_bcs_digests_public_signature_and_key_match": true,
+    "success": true, "typed_accumulator_basis": "Balance<exact asset>",
+    "sender_operation": "SPLIT", "receiver_operation": "MERGE", "each_amount_base_units": 10000,
+    "current_balance_snapshot_taken": false,
+    "prepared_file_sha256": "d59b35ca0bd82438969f58a79621a6ae3d2a55ff15fbbcc3f00725e6eb5c6548"
+  },
+  "historical_stages": [
+    {"stage": "submit-fault", "exit_code": 86, "evidence": "Received VerifiedSuccess before persistence; intent/attempt committed"},
+    {"stage": "reconcile", "exit_code": 0, "evidence": "Fresh saved-digest checkpoint query"},
+    {"stage": "accept-fault", "exit_code": 86, "evidence": "Fresh merchant verification; atomic credit/observation before receipt export"},
+    {"stage": "accept-restart", "exit_code": 0, "evidence": "Cached existing credit, regenerated receipt, no node query"},
+    {"stage": "confirm", "exit_code": 0, "evidence": "Fresh confirmation query, then atomic association"},
+    {"stage": "accept-duplicate", "exit_code": 0, "evidence": "Cached existing credit, no node query"},
+    {"stage": "confirm-duplicate", "exit_code": 0, "evidence": "Cached existing association, no node query"}
+  ],
+  "fault_boundaries": {
+    "after_submit": {"artifacts": 1, "intents": 1, "attempts": 1, "query_not_found_observations": 1, "dispatch_observations": 0, "wallet_associations": 0},
+    "after_credit": {"new_trial_credits": 1, "new_trial_merchant_observations": 1, "wallet_associations": 0},
+    "historical_receipt_absence_basis": "Native receipt_exported=false marker plus reviewed runner contemporaneous lexists assertion; no separately retained filesystem-absence snapshot",
+    "standalone_historical_filesystem_absence_snapshot": false,
+    "stored_regenerated_and_duplicate_receipt_bytes_match": true,
+    "receipt_sha256": "c7eb001917953549ae22da0d589e7d8e38585007a2aee0ed9837cb6c6b8e2f0b"
+  },
+  "independent_verification": {
+    "new_native_command": "testnet reconcile", "exit_code": 0, "waited": true,
+    "fresh_execution_observations": 1, "new_payments": 0,
+    "historical_stages_rerun": false, "owned_runtimes_remaining": 0,
+    "seven_historical_process_identities_stopped": true
+  },
+  "counts": {
+    "trial_wallet_final": {"candidates": 1, "reservations": 1, "artifacts": 1, "intents": 1, "attempts": 1, "associations": 1},
+    "wallet_observations": {"before_trial": 0, "after_submit_fault": 1, "after_reconcile": 2, "after_confirm": 3, "after_duplicates": 3, "after_independent_query": 4},
+    "authoritative_merchant_credits": {"before_trial": 1, "after_trial": 2, "after_independent_query": 2, "new_trial_credits": 1},
+    "authoritative_merchant_registrations": 2, "authoritative_merchant_observations": 2,
+    "simulated_rows": {"wallet_payments": 0, "wallet_receipts": 0, "merchant_payments": 0, "merchant_receipts": 0}
+  },
+  "preservation": {"all_prior_row_fingerprints_retained_through_every_stage": true, "original_invoice_inbox_registration_prepared_and_receipts_unchanged": true},
+  "previous_milestone": {
+    "evidence": "emulated-testnet-checkout-2026-10-29.json",
+    "evidence_sha256": "3568c28c5cc9eabed429b780de7418fa8f1d8c7bb567bc8e78384d96ffae5098",
+    "digest": "7LemioWwAmjRYA9gqsZZBCnCnUgpESH3qfg7mJzJCJxz", "checkpoint": 400344020, "credit_retained": true
+  },
+  "retained_source_sha256": {
+    "after-submit-fault.json": "da9125cd93868d12ca15632c1fcd3b23212207d7baabcd7398875fbefc20b106",
+    "after-credit-fault.json": "67b0aa98a237d2e37b14a926a1d4d218ad99771e1017d6e35ff8cce2064e3cf8",
+    "after.json": "976aed4bb4bee0339c475d4c31ff360d107f35b12926505dee02c054f49ae6b9",
+    "runner-result.json": "cfc0c21167e06b7c73f8fde92006586f8aafc1ac458051270c01a00ee8d78301"
+  },
+  "limits": {
+    "wire_level_reply_loss_tested": false, "dropped_rpc_packet_tested": false,
+    "power_cut_tested": false, "host_crash_tested": false, "filesystem_durability_certified": false,
+    "independent_node_operators": false, "light_client_proof": false, "physical_rf_tested": false,
+    "authenticated_remote_business_ack": false, "production_custody_qualified": false, "security_audit": false,
+    "receivers_now_used": 2, "new_payment_authorized_by_this_record": false,
+    "notice": "Preserve both receiving identities and authoritative ledger; no reuse, empty-ledger reset or automatic third trial. Further funds activity requires a fresh receiver and separate explicit native approval."
+  }
+}

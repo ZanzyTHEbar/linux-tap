@@ -1,5 +1,20 @@
 # Architecture
 
+**Current evidence, 29 October 2026:** one complete native private-PC/SC emulated
+real testnet checkout is independently verified, including human-approved saved
+bytes, checkpoint execution, merchant credit and wallet association.
+[Sanitized first-checkout record](evidence/emulated-testnet-checkout-2026-10-29.json).
+A second human-approved payment verified both application-boundary faults and
+exact keyless restart/receipt recovery, preserving the authoritative first credit:
+[recovery evidence](evidence/emulated-testnet-recovery-2026-10-29.json).
+Wallet/merchant used the same official fullnode, not independent operators or a
+light client. Physical RF, wire-level unknown outcomes, host failure, custody and power-loss
+qualification remain open; this does not implement the full proposed architecture.
+
+For the proposed target beyond this bootstrap, see [product architecture](product-architecture.md),
+[product design](product-design.md) and [ADR 0003](adr/0003-reuse-first-product-boundaries.md).
+Those proposals do not upgrade the implementation or validation facts below.
+
 This bootstrap implements the first laboratory milestone of the existing native
 Linux Sui engineering specification. It does not replace the foundation charter
 or implement the full production service decomposition.
@@ -54,8 +69,8 @@ checkout with onchain deduplication is a separate paid or sponsored profile.
 ## Scope changes from the paper design
 
 The initial workspace has three crates rather than ten services. The signed
-invoice is a deliberately smaller draft v0 schema. Successful network eligibility
-remains unproven and submission is unimplemented. A trusted RPC predicate exists,
+invoice is a deliberately smaller draft v0 schema. Controlled funding/conversion,
+eligibility and one actual testnet checkout are now verified. A trusted RPC predicate exists,
 but no chain result has been manufactured to make the simulator look live. The separate
 read-only `qualify-testnet` command now checks protocol configuration, exact asset
 metadata, address-balance funding and checked simulation of `build_direct`.
@@ -63,11 +78,39 @@ It constructs diagnostic unsigned terms, not an authenticated payment request;
 it does not relax invoice pins, signing or receipt predicates. The default
 pinned asset fails on testnet. Explicit Circle testnet qualification uses the
 same bounded template and reconstruction with a separate exact type/genesis
-policy; that path is not exposed by the signer or receipt verifier. A successful
+policy. The original qualification-only increment did not expose it through
+signing or receipt verification. The explicit preparation checkpoint now does,
+without changing legacy defaults; see the current README and validation record. A successful
 simulation from a pre-existing funded public address is not fresh-wallet or
-settlement evidence. Conversion and submission remain unimplemented.
+settlement evidence. Separate native conversion and controlled submission were
+subsequently implemented and exercised by the human; the milestone above records
+their narrow real-testnet qualification, including the scoped application-boundary
+recovery above, not wire-level/host/power-failure proof.
 Hardware profiles, fresh merchant custody addresses, production recovery and
 Qt approval remain explicit backlog items.
+
+Explicit testnet preparation adds bounded versioned candidate/reservation/artifact
+tables under the existing cooperative owner lock, without promoting simulated
+receipts. Its saved candidate binds the exact envelope, independent merchant pin,
+fixed policy/profile, endpoint, signer, BCS and digest. The unique issuance key
+binds merchant pin, chain and invoice ID. Approval and its qualification summary
+are committed before key loading; recovery approvals append without replacing
+the reservation. The subsequent controlled-dispatch slice adds a transactional
+first intent/attempt barrier before polling the SDK execution helper, append-only
+attempt approvals and typed node observations. It never rebuilds or signs a
+transaction. A missing result after this barrier means possibly sent; restart
+queries the saved digest first. Only explicit same-artifact replay is supported.
+
+The independently configured merchant ledger adds one immutable trust namespace,
+one receiver reservation per invoice (unique chain/receiver), independent node
+observations, and transactional credit/receipt insertion with unique chain/digest.
+Wallet confirmation rechecks the chosen merchant node before durable association.
+All loaded approval, attempt, observation, credit and association records are
+validated against their saved terms and profile; no simulator rows are promoted.
+The node is trusted for checkpoint inclusion, not a light client. File receipts
+are not authenticated remote business acknowledgements. These local commands
+have no merchant private-key dependency. Full custody/backup, global receiver
+freshness, remote delivery, refunds and broader wire/host/power-failure qualification remain open.
 
 USDC is a centralized-issuer asset on a decentralized settlement network. The
 project can remove mandatory wallet/cloud dependencies; it cannot remove issuer

@@ -18,7 +18,9 @@ use sui_sdk_types::{
 };
 use tap_core::{DirectAssetPolicy, Invoice};
 
+pub mod conversion;
 pub mod qualification;
+pub mod settlement;
 
 /// Experimental address-balance template using only official SDK types and BCS.
 /// The pinned offline builder rejects empty gas objects; see ADR 0002.
@@ -31,8 +33,8 @@ pub fn build_direct(
     build_direct_with_policy(invoice, sender, epoch, nonce, DirectAssetPolicy::PinnedUsdc)
 }
 
-// The explicit alternate profile is qualification-only; signing keeps its default policy.
-pub(crate) fn build_direct_with_policy(
+/// Build under an explicit local allowlist, never one inferred from invoice contents.
+pub fn build_direct_with_policy(
     invoice: &Invoice,
     sender: Address,
     epoch: u64,
@@ -92,7 +94,8 @@ pub fn verify_template(invoice: &Invoice, tx: &Transaction) -> Result<()> {
     verify_template_with_policy(invoice, tx, DirectAssetPolicy::PinnedUsdc)
 }
 
-pub(crate) fn verify_template_with_policy(
+/// Reconstruct the exact template under the caller's independently selected policy.
+pub fn verify_template_with_policy(
     invoice: &Invoice,
     tx: &Transaction,
     policy: DirectAssetPolicy,
@@ -138,6 +141,18 @@ pub trait PaymentSigner {
 }
 
 pub struct DevelopmentSigner(pub Ed25519PrivateKey);
+impl DevelopmentSigner {
+    /// Software signing with explicit local policy; caller must durably reserve issuance first.
+    pub fn sign_payment_with_policy(
+        &self,
+        invoice: &Invoice,
+        transaction: &Transaction,
+        policy: DirectAssetPolicy,
+    ) -> Result<Prepared> {
+        verify_template_with_policy(invoice, transaction, policy)?;
+        Prepared::sign(transaction, &self.0)
+    }
+}
 impl PaymentSigner for DevelopmentSigner {
     fn address(&self) -> Address {
         self.0.public_key().derive_address()
@@ -181,6 +196,18 @@ impl Prepared {
 }
 
 fn client(endpoint: &str) -> Result<Client> {
+    validate_endpoint(endpoint)?;
+    Ok(Client::new(endpoint)?.with_response_headers_timeout(Duration::from_secs(10)))
+}
+
+/// Require explicit TLS or the existing loopback development endpoint policy.
+pub fn validate_endpoint(endpoint: &str) -> Result<()> {
+    // Userinfo can turn a loopback-looking prefix into an external HTTP authority.
+    // Credentials also do not belong in the persisted endpoint/trust namespace.
+    ensure!(
+        !endpoint.contains('@') && !endpoint.chars().any(char::is_control),
+        "endpoint userinfo and control characters are not supported"
+    );
     // HTTPS is required except for explicit local development nodes.
     ensure!(
         endpoint.starts_with("https://")
@@ -188,7 +215,7 @@ fn client(endpoint: &str) -> Result<Client> {
             || endpoint.starts_with("http://localhost:"),
         "endpoint must use TLS or loopback"
     );
-    Ok(Client::new(endpoint)?.with_response_headers_timeout(Duration::from_secs(10)))
+    Ok(())
 }
 
 #[derive(Debug, Serialize)]
@@ -217,8 +244,18 @@ pub async fn probe(endpoint: &str) -> Result<NodeInfo> {
 
 /// Explicitly trusts this node for checkpoint inclusion. No foundation RPC is required.
 pub async fn verify_on_node(endpoint: &str, invoice: &Invoice, prepared: &Prepared) -> Result<u64> {
+    verify_on_node_with_policy(endpoint, invoice, prepared, DirectAssetPolicy::PinnedUsdc).await
+}
+
+/// Verify checkpoint inclusion on an explicitly trusted node with an explicit local asset policy.
+pub async fn verify_on_node_with_policy(
+    endpoint: &str,
+    invoice: &Invoice,
+    prepared: &Prepared,
+    policy: DirectAssetPolicy,
+) -> Result<u64> {
     let tx = prepared.transaction()?;
-    verify_template(invoice, &tx)?;
+    verify_template_with_policy(invoice, &tx, policy)?;
     let info = probe(endpoint).await?;
     ensure!(
         info.chain_id.parse::<Digest>()? == Digest::new(invoice.chain),
@@ -234,10 +271,11 @@ pub async fn verify_on_node(endpoint: &str, invoice: &Invoice, prepared: &Prepar
     )
     .await??
     .into_inner();
-    verify_execution(
+    verify_execution_with_policy(
         invoice,
         prepared,
         &r.transaction.context("missing execution")?,
+        policy,
     )
 }
 
@@ -247,8 +285,37 @@ pub fn verify_execution(
     prepared: &Prepared,
     executed: &ExecutedTransaction,
 ) -> Result<u64> {
+    verify_execution_with_policy(invoice, prepared, executed, DirectAssetPolicy::PinnedUsdc)
+}
+
+/// Receipt predicate with caller-selected policy. The caller independently authenticates node genesis.
+pub fn verify_execution_with_policy(
+    invoice: &Invoice,
+    prepared: &Prepared,
+    executed: &ExecutedTransaction,
+    policy: DirectAssetPolicy,
+) -> Result<u64> {
+    let checkpoint = verify_execution_identity(invoice, prepared, executed, policy)?;
+    ensure!(
+        executed
+            .effects
+            .as_ref()
+            .and_then(|e| e.status.as_ref())
+            .and_then(|s| s.success)
+            == Some(true),
+        "execution failed or unknown"
+    );
+    Ok(checkpoint)
+}
+
+fn verify_execution_identity(
+    invoice: &Invoice,
+    prepared: &Prepared,
+    executed: &ExecutedTransaction,
+    policy: DirectAssetPolicy,
+) -> Result<u64> {
     let tx = prepared.transaction()?;
-    verify_template(invoice, &tx)?;
+    verify_template_with_policy(invoice, &tx, policy)?;
     ensure!(
         executed.digest.as_deref() == Some(&prepared.digest),
         "execution digest mismatch"
@@ -258,10 +325,6 @@ pub fn verify_execution(
     ensure!(
         effects.transaction_digest.as_deref() == Some(&prepared.digest),
         "effects digest mismatch"
-    );
-    ensure!(
-        effects.status.as_ref().and_then(|s| s.success) == Some(true),
-        "execution failed or unknown"
     );
     let observed: Transaction = executed
         .transaction

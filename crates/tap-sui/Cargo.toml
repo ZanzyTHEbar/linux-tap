@@ -8,6 +8,10 @@ license.workspace = true
 anyhow.workspace = true
 bcs.workspace = true
 hex.workspace = true
+prost.workspace = true
+http.workspace = true
+tonic.workspace = true
+tower.workspace = true
 tap-core = { path = "../tap-core" }
 sui-sdk-types.workspace = true
 sui-crypto.workspace = true

@@ -11,7 +11,7 @@ use sui_rpc::{
         simulate_transaction_request::TransactionChecks,
     },
 };
-use sui_sdk_types::{Address, Digest, Transaction};
+use sui_sdk_types::{Address, Digest, Transaction, TransactionExpiration};
 use tap_core::{DirectAssetPolicy, Invoice};
 
 #[derive(Serialize)]
@@ -81,6 +81,38 @@ pub async fn qualify_testnet_with_policy(
     };
     let tx = build_direct_with_policy(&invoice, sender, node.epoch, 0, policy)?;
     verify_template_with_policy(&invoice, &tx, policy)?;
+    qualify_exact(endpoint, &invoice, &tx, policy, node).await
+}
+
+/// Qualify the actual frozen payment candidate without rebuilding its nonce, epoch or bytes.
+/// This is eligibility only, not authorization or settlement. No key or execution RPC is used.
+pub async fn qualify_candidate(
+    endpoint: &str,
+    invoice: &Invoice,
+    tx: &Transaction,
+    policy: DirectAssetPolicy,
+) -> Result<Qualification> {
+    verify_template_with_policy(invoice, tx, policy)?;
+    let node = probe(endpoint).await?;
+    ensure!(node.chain.as_deref() == Some("testnet"), "testnet required");
+    ensure!(
+        node.chain_id.parse::<Digest>()? == Digest::new(invoice.chain),
+        "chain pin mismatch"
+    );
+    qualify_exact(endpoint, invoice, tx, policy, node).await
+}
+
+async fn qualify_exact(
+    endpoint: &str,
+    invoice: &Invoice,
+    tx: &Transaction,
+    policy: DirectAssetPolicy,
+    node: super::NodeInfo,
+) -> Result<Qualification> {
+    let asset = policy.coin_type();
+    let sender = tx.sender;
+    let receiver = Address::new(invoice.receiver);
+    let amount = invoice.amount;
     let mut report = Qualification {
         endpoint: endpoint.into(),
         node,
@@ -89,7 +121,7 @@ pub async fn qualify_testnet_with_policy(
         receiver,
         amount,
         transaction_digest: tx.digest().to_string(),
-        transaction_bcs_hex: hex::encode(bcs::to_bytes(&tx)?),
+        transaction_bcs_hex: hex::encode(bcs::to_bytes(tx)?),
         protocol: None,
         coin_info: None,
         balance: None,
@@ -98,6 +130,12 @@ pub async fn qualify_testnet_with_policy(
         qualified: false,
         chain_submission: false,
     };
+    if !matches!(tx.expiration, TransactionExpiration::ValidDuring { min_epoch: Some(min), max_epoch: Some(max), .. } if min == report.node.epoch && max == report.node.epoch)
+    {
+        report
+            .blockers
+            .push("candidate epoch is not current; saved bytes must not be replaced".into());
+    }
     let mut c = client(endpoint)?;
     let mut epoch_req = GetEpochRequest::default();
     epoch_req.epoch = Some(report.node.epoch);
@@ -212,11 +250,7 @@ pub async fn qualify_testnet_with_policy(
             .push("address-balance read timed out".into()),
     }
     // Never disable checks, select gas, substitute an asset, or alter the exact template.
-    let mut req = SimulateTransactionRequest::default();
-    req.transaction = Some(tx.clone().into());
-    req.read_mask = Some(FieldMask::from_paths(["*"]));
-    req.checks = Some(TransactionChecks::Enabled as i32);
-    req.do_gas_selection = Some(false);
+    let req = simulation_request(tx);
     match tokio::time::timeout(
         Duration::from_secs(15),
         c.execution_client().simulate_transaction(req),
@@ -225,7 +259,7 @@ pub async fn qualify_testnet_with_policy(
     {
         Ok(Ok(r)) => {
             let simulation = r.into_inner();
-            if let Err(error) = verify_simulation(&tx, &simulation) {
+            if let Err(error) = verify_simulation(tx, &simulation) {
                 report
                     .blockers
                     .push(format!("simulation not qualified: {error:#}"));
@@ -260,7 +294,46 @@ pub async fn qualify_testnet_with_policy(
     Ok(report)
 }
 
-fn verify_simulation(tx: &Transaction, simulation: &SimulateTransactionResponse) -> Result<()> {
+pub(crate) fn simulation_request(tx: &Transaction) -> SimulateTransactionRequest {
+    let mut request = SimulateTransactionRequest::default();
+    request.transaction = Some(tx.clone().into());
+    request.read_mask = Some(FieldMask::from_paths(["*"]));
+    request.checks = Some(TransactionChecks::Enabled as i32);
+    request.do_gas_selection = Some(false);
+    request
+}
+
+/// Validate a lab preparation request using official protobuf/transaction decoding and native policy.
+/// Exact re-encoding rejects unknown fields, unchecked simulation and gas-selection variants.
+pub fn validate_lab_simulation(
+    invoice: &Invoice,
+    expected_sender: Address,
+    payload: &[u8],
+) -> Result<()> {
+    use prost::Message;
+    let request = SimulateTransactionRequest::decode(payload)?;
+    let tx = Transaction::try_from(
+        request
+            .transaction
+            .as_ref()
+            .context("simulation omits transaction")?,
+    )?;
+    ensure!(
+        invoice.amount == 10_000 && tx.sender == expected_sender,
+        "lab terms mismatch"
+    );
+    verify_template_with_policy(invoice, &tx, DirectAssetPolicy::CircleTestnetUsdc)?;
+    ensure!(
+        request == simulation_request(&tx) && request.encode_to_vec() == payload,
+        "lab simulation must be the exact checked native request, without extra fields"
+    );
+    Ok(())
+}
+
+pub(crate) fn verify_simulation(
+    tx: &Transaction,
+    simulation: &SimulateTransactionResponse,
+) -> Result<()> {
     let executed = simulation
         .transaction
         .as_ref()

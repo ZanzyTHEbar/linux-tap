@@ -15,6 +15,12 @@ The core integration uses sui-sdk-types, sui-crypto and sui-rpc under Apache-2.0
 minicbor under BlueOak-1.0.0; blake2 and Tokio under their declared permissive
 licenses; rusqlite with bundled SQLite; and clap, serde and related dependencies
 under the alternatives recorded in the inventory. The optional pcsc crate is MIT.
+The B14 SQLite fix selects rusqlite 0.39.0 / libsqlite3-sys 0.37.0 (MIT),
+bundling upstream SQLite 3.51.3 (public domain). The inventory records the
+changed dependency closure, including rusqlite's non-Linux WASM dependencies;
+those are not a new Linux runtime or wallet engine. Native SQL identity and
+fixture checkpoint/reopen qualification passed; [scoped evidence](docs/evidence/sqlite-wal-qualification-2026-10-29.json)
+is not wire-loss, power-cut or production durability proof.
 System PC/SC, reader drivers, Qt and future hardware dependencies have their own
 distribution requirements and are not included as binaries.
 
@@ -40,9 +46,20 @@ installed, license-qualified for every use or tested with our hardware.
 The Gem Wallet, Electrum, Monero GUI, Trust Wallet Core, Ledger Sui application
 and BTCPay repositories were evaluated as possible foundations or references.
 Their code is not copied into this bootstrap. See docs/reuse.md for the decision.
-The current Gem monorepo's GPL-3.0 terms must not be replaced with the historical
-standalone core's MIT description when considering a future fork.
+Clarification, 28 October 2026: the inspected current Gem monorepo's
+`core/LICENSE` is MIT, separately from its top-level application GPL terms.
+Neither applies indiscriminately to every file. See the pinned license/source
+evidence in the [payment implementation map](docs/research/payment-implementation-map.md).
+This is a scope correction, not adoption or clearance of dependencies/assets.
 
 No firmware blobs, commercial SDKs or third-party wallet branding are distributed.
+
+The opt-in [virtual PC/SC lab](docs/pcsc-lab.md#sources-checksums-and-licenses)
+pins official pcsc-lite 2.3.3, vsmartcard `93286a90…` and Meson 1.7.0-1 downloads
+with SHA-256 checks. Only `scripts/pcsc-lab-vpcd.patch` is retained here as a
+GPL-3.0-or-later modification to vpcd; new orchestration code remains Apache-2.0.
+Complete sources, upstream notices/licenses and locally built binaries stay in
+the private external cache, not the checkout. No package/system service install.
+
 Open hardware interfaces do not establish that a secure element's firmware or
 vendor provisioning service is open. No project endorsement is implied.

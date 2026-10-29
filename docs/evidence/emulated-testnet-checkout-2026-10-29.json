@@ -1,0 +1,93 @@
+{
+  "record_kind": "sanitized_public_evidence_excerpt_not_test_fixture",
+  "milestone": "first_native_private_pcsc_emulated_real_testnet_checkout",
+  "outcome": "PASS",
+  "verified_utc": "2026-10-29T00:39:01Z",
+  "verification_session": "ses_e7ccea915ffeYUiCnAyPFmRDnJ",
+  "source_capture_names": ["REPORT.md", "result.json", "fresh-node-observation.json", "pcsc-binding.json", "before.json"],
+  "after_counts_source": "result.json.after_counts",
+  "network": "Sui testnet only",
+  "trusted_endpoint": "https://fullnode.testnet.sui.io:443",
+  "genesis": "69WiPg3DAQiwdxfncX6wYQ2siKwAe6L9BZthQea3JNMD",
+  "asset": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+  "amount_base_units": 10000,
+  "amount_display": "0.01 USDC",
+  "transaction_digest": "7LemioWwAmjRYA9gqsZZBCnCnUgpESH3qfg7mJzJCJxz",
+  "checkpoint": 400344020,
+  "execution_epoch": 1267,
+  "invoice_hash": "8ae59d47c8ea2d23c1ed5b237f9519bace22bb88144270c5ff347d894f53fcae",
+  "sender": "0xb6b852118f51421abf2a930216ea62b88a283b5d0be7de326695bc23768d14f1",
+  "receiver": "0x9a70b588da0ddd4f08c829df7fb502d7467f4699aec142fbd271f2c081027288",
+  "merchant_pin": "88fd7ab199410d1905c9f6794ab7e6097f45b143941ed4911658b9d67a4c0f43",
+  "human_completed": ["invoice", "register", "delivery", "prepare", "submit", "accept", "confirm"],
+  "transport": {
+    "path": "native nfc-push -> private AF_UNIX pcscd/vpcd -> thin VICC -> Rust receiver",
+    "protocol": "T=1",
+    "atr_hex": "3b800181",
+    "exact_apdu_sequence": true,
+    "receiver_exit_code": 0,
+    "fixture_autoapproval": false,
+    "delivery_status": "APDU_DELIVERED_NOT_APPROVED_NOT_PAID",
+    "invoice_inbox_candidate_and_transport_snapshots_byte_identical": true,
+    "shared_invoice_bytes_sha256": "43519fc00c4cbc558b56293e9acd46176293ce7daa2c4ac3399e3ac84ca374ee"
+  },
+  "signed_artifact": {
+    "human_approved_official_sdk_signature": true,
+    "node_bcs_matches_saved_bytes": true,
+    "inner_outer_effects_transaction_digests_match": true,
+    "node_public_signature_and_public_key_match_saved_artifact": true,
+    "pre_execution_dispatch_intent": true,
+    "historical_qualification": {"protocol_version": 139, "epoch": 1267, "checks_enabled": true, "gas_selection": false}
+  },
+  "checkpoint_effects": {
+    "success": true,
+    "basis": "typed Balance<asset> accumulator writes",
+    "sender_operation": "SPLIT",
+    "receiver_operation": "MERGE",
+    "each_amount_base_units": 10000,
+    "balance_changes_returned": false,
+    "current_balance_snapshot_taken": false
+  },
+  "independent_keyless_verification": [
+    {"stage": "testnet reconcile", "exit_code": 0, "result": "VerifiedSuccess", "fresh_execution_observation": true},
+    {"stage": "testnet accept duplicate", "exit_code": 0, "result": "MERCHANT_EXISTING_IDENTICAL_CREDIT", "fresh_execution_observation": false},
+    {"stage": "testnet confirm duplicate", "exit_code": 0, "result": "WALLET_EXISTING_IDENTICAL_CHAIN_CONFIRMED_ASSOCIATION", "fresh_execution_observation": false}
+  ],
+  "essential_counts_before_after": {
+    "wallet_candidate": [1, 1],
+    "wallet_reservation": [1, 1],
+    "wallet_artifact": [1, 1],
+    "wallet_dispatch_intent": [1, 1],
+    "wallet_dispatch_attempt": [1, 1],
+    "wallet_receipt_association": [1, 1],
+    "wallet_observations": [3, 4],
+    "merchant_registration": [1, 1],
+    "merchant_observation": [1, 1],
+    "merchant_credit": [1, 1],
+    "wallet_simulated_payments_and_receipts": [0, 0],
+    "merchant_simulated_payments_and_receipts": [0, 0]
+  },
+  "idempotency": {
+    "original_invoice_registration_inbox_prepared_receipt_byte_identical": true,
+    "replayed_receipt_byte_identical": true,
+    "all_original_rows_unchanged_except_one_wallet_observation_append": true,
+    "additional_payments_signatures_dispatch_attempts_credits_or_associations": 0,
+    "verification_cli_processes_waited": 3,
+    "owned_runtimes_remaining": 0
+  },
+  "original_files_sha256": {
+    "invoice.json": "43519fc00c4cbc558b56293e9acd46176293ce7daa2c4ac3399e3ac84ca374ee",
+    "registration.json": "9a96820c835827083dad2ec7c7981df6ba5aa0ec6fa3a0abc642789d612c11e3",
+    "inbox.json": "43519fc00c4cbc558b56293e9acd46176293ce7daa2c4ac3399e3ac84ca374ee",
+    "prepared.json": "3d0a93528c33724476c786316db027437c8cf8100ac080b049f36a9c42d5b37e",
+    "receipt.json": "903a0d1f7e9eb26b92bf2bbbb891383dcb84e9de40dc23d4f6d110dbee9ae471"
+  },
+  "limits": [
+    "Wallet and merchant use the same official fullnode; separate process queries, not independent operators or a light-client proof",
+    "One real testnet payment through virtual PCSC, not physical NFC/RF or mainnet",
+    "No live lost-RPC, lost-receipt or power-cut injection; earlier simulated fault tests remain separate",
+    "Not production custody, a security audit or an authenticated remote business acknowledgement",
+    "Receiver is now used; preserve journals and receiving custody, never reset reuse policy with a new ledger",
+    "Further real-chain fault qualification needs separate approval; hardware remains deferred"
+  ]
+}

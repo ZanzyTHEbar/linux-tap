@@ -1,0 +1,3 @@
+# Preserve unified-diff context/removal payload, including upstream trailing blanks.
+# Added patch lines are checked separately; ordinary source whitespace rules remain.
+scripts/pcsc-lab-vpcd.patch whitespace=-blank-at-eol

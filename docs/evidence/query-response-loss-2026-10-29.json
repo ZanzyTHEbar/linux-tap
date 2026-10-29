@@ -1,0 +1,65 @@
+{
+  "record_kind": "sanitized_public_read_query_response_loss_qualification",
+  "result": "PASS_READ_QUERY_RESPONSE_LOSS_ONLY",
+  "verified_utc": "2026-10-29T12:16:38.708377Z",
+  "scope": "Real upstream read response withheld at a local HTTP2 proxy before native SDK response delivery; reconstructed lab state, not execution-response loss",
+  "upstream": "https://fullnode.testnet.sui.io:443",
+  "genesis": "69WiPg3DAQiwdxfncX6wYQ2siKwAe6L9BZthQea3JNMD",
+  "asset": "0xa1ec7fc00a6f40db9693ad1415d0c193ad3906494428cf252621037bd7117e29::usdc::USDC",
+  "already_settled_digest": "52wFhV654LoLhXycxB5nxn3B2ddM4siC7Mm72opYt9sW",
+  "checkpoint": 400484678,
+  "execution_epoch": 1267,
+  "new_payment": false,
+  "fixture_provenance": {
+    "profile": "RECONSTRUCTED_LAB_STATE_NOT_LIVE_CUSTODY_OR_NEW_APPROVAL",
+    "source_record": "Retained public verifier before-fresh-query.json, not a live database",
+    "source_snapshot_sha256": "976aed4bb4bee0339c475d4c31ff360d107f35b12926505dee02c054f49ae6b9",
+    "separate_control_and_pending_journals": true,
+    "initial_pending_state": "One original candidate/reservation/artifact/intent/attempt and only the first Query/NotFound observation",
+    "metadata_changes": "Wallet candidate/intent/attempt and original Query endpoint rebound to private loopback; later historical successes and association excluded",
+    "merchant_registration_and_endpoint_unchanged": true,
+    "signed_artifact_value_unchanged": true,
+    "new_human_approval": false
+  },
+  "native_stages": [
+    {"stage": "control, separate journal", "exit_code": 0, "outcome": "VerifiedSuccess", "checkpoint": 400484678},
+    {"stage": "lost query response, pending journal", "exit_code": 1, "outcome": "Unknown", "persisted": true, "execution": null, "transport_error": "tonic/hyper HTTP2 Reset(StreamId(1), CANCEL, Remote)"},
+    {"stage": "fresh-process query, same pending journal", "exit_code": 0, "outcome": "VerifiedSuccess", "checkpoint": 400484678}
+  ],
+  "wire_fault": {
+    "utc": "2026-10-29T12:14:57.855Z",
+    "marker": "fault_after_upstream_read_before_downstream_delivery",
+    "method": "/sui.rpc.v2.LedgerService/GetTransaction",
+    "upstream_http_status": 200,
+    "upstream_grpc_status": "0",
+    "upstream_response_bytes": 1285,
+    "upstream_response_sha256": "e6ba372cb8cd5f1103a61bdfcf0f190ad6955497f030328ff9f8a76315abe2b6",
+    "transaction_request_sha256": "f1ddadc2a97339a76550ba8585cc331641751137190cc0e94c92d8946d30a74a",
+    "downstream_success_headers_sent": false,
+    "downstream_response_bytes_sent": 0,
+    "downstream_reset_code": 8,
+    "downstream_reset_name": "NGHTTP2_CANCEL",
+    "control_loss_recovery_transaction_request_and_response_hashes_identical": true,
+    "proxy_trace_sha256": "8842ab6c5154e7b9637332b9bf8a5009dc280172e0818a537270e1991be1f9da"
+  },
+  "read_budget": {"GetServiceInfo": 3, "GetTransaction": 3, "total_upstream_calls": 6, "mutating_calls": 0, "automatic_retry_or_fallback": false},
+  "preservation": {
+    "pending_observation_counts_before_loss_recovery": [1, 2, 3],
+    "candidate_reservation_artifact_intent_attempt_counts_each": [1, 1, 1],
+    "credits_and_receipt_associations_each": [0, 0, 0],
+    "all_non_observation_rows_unchanged": true,
+    "full_artifact_json_byte_identical_across_all_four_snapshots": true,
+    "control_and_recovered_execution_equal": true,
+    "prepared_row_json_sha256": "cf2017853647d4a8632d88f5297a825b537a77cc77ed9968ba092dbc715214c6",
+    "bcs_sha256": "ec86f016002d739ff1c8aa49ed37c03eb9cd05396426f32f70aae2081f49f35e",
+    "signature_bytes_sha256": "51beab1f99706a213eca99f46a3f59c165be382114ec938f9082e1f8f70bdf22"
+  },
+  "cleanup": {"native_query_processes": 3, "proxy_processes": 1, "controller_processes": 1, "recorded_identities_stopped": 5, "proxy_exit_code": 0, "all_commands_waited": true, "owned_runtimes_remaining": 0},
+  "implementation": {"rust_sdk_or_policy_changes": false, "proxy_or_harness_corrections_needed": false, "new_dependency": false, "source_safety_review": "Completed with no blocking/material P1/P2", "post_run_evidence_review": "Pending", "heavy_existing_checks": "Queued until coordinator grants post-render heavy window; previous SQLite-phase checks are historical"},
+  "preserved_primary_evidence_sha256": {
+    "emulated-testnet-checkout-2026-10-29.json": "3568c28c5cc9eabed429b780de7418fa8f1d8c7bb567bc8e78384d96ffae5098",
+    "emulated-testnet-recovery-2026-10-29.json": "1bfceaa1ff16fb94eaa37eef8ca96e9e1bab5371055e6d924cebe44a49b4de7f",
+    "sqlite-wal-qualification-2026-10-29.json": "5975e2aa0a0d2200963158c15c0640b52bc40256bd9065b078d2f3619e14db7c"
+  },
+  "limits": {"execution_response_loss_tested": false, "fresh_execution_uncertainty_tested": false, "wire_loss_location": "Local proxy after complete upstream read, before downstream response delivery", "host_crash_tested": false, "power_cut_tested": false, "filesystem_durability_certified": false, "independent_node_operators": false, "light_client_proof": false, "authenticated_remote_business_ack": false, "production_custody_qualified": false, "real_journals_opened": false, "new_signature_or_submission": false, "b14_complete": false}
+}
