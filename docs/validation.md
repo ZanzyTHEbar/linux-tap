@@ -1,13 +1,38 @@
 # Validation record
 
-## Privacy rewrite candidate — fresh-clone validation pending
+## Privacy rewrite candidate — fresh-clone checks pass; privacy review pending
 
 Local agent/media/fixture directories and legacy bootstrap/history artifacts are
 excluded from rewritten history; local copies are retained privately. Project
 commit identities use the public account's GitHub noreply identity. Incidental
 operator paths are redacted. Existing chain evidence and upstream license
-attributions are preserved. Only source/static checks are authorized in this phase;
-fresh-clone builds and independent review must complete before any lease-guarded push.
+attributions are preserved. The isolated rewrite removed 39 distinct historical
+paths and normalized all 14 original author/committer identity fields. Local asset
+copies remain unchanged; no public rewrite has been pushed yet. GitHub caches,
+old commit views and third-party clones may retain published history after a push;
+owner action with GitHub Support may be needed for cached copies.
+
+A genuinely fresh Git clone, with none of the excluded directories, bootstrap
+file, embedded history bundle, prior target directory or virtual environment,
+passed these offline checks with `CARGO_BUILD_JOBS=4` and `TMPDIR=/tmp/opencode`:
+- `CARGO_NET_OFFLINE=true bash scripts/check.sh`: format, Clippy, **15 tests**,
+  native build and process/checkpoint/reopen/replay smoke, **exit 0**.
+- `CARGO_NET_OFFLINE=true cargo test --workspace --features pcsc-reader --locked`:
+  **15 tests, exit 0**, with the existing private PC/SC cache's pkg-config directory.
+- `CARGO_NET_OFFLINE=true cargo build --locked -p tap-cli --features pcsc-reader`:
+  **exit 0**; the final fresh-clone executable retains PC/SC support.
+- `CARGO_NET_OFFLINE=true cargo run --quiet --locked -p tap-cli --example fixture`:
+  **exit 0**, generating the existing deterministic expired public invoice at runtime.
+  Actual native `apdu-roundtrip` on that generated input passed, **exit 0**.
+- Both proxy `node --check` commands and Python AST/link checks passed. The
+  bridge harness retains all eight original assertions and no longer reads the
+  excluded fixture directory. Its full D-Bus interface scenario was **not run**:
+  the declared `dbus-next` dependency and pip are unavailable here; no package was
+  installed and no validator/interface was mocked. CI installs that dependency
+  explicitly; runtime fixture/APDU success is not a claim of full bridge CI success.
+
+Independent privacy review and resolution of the bridge validation gap precede
+any lease-guarded push. No real keys/journals, node RPC or funded execution was used.
 
 ## Execution-response-loss candidate: offline native guards validated
 
